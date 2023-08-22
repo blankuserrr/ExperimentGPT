@@ -1,0 +1,103 @@
+body {
+    background-color: #171717;
+    color: #FAEAEC;
+    font-family: 'Noto Sans', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+#chatContainer {
+    background-color: #3c101b;
+    border-radius: 20px;
+    max-width: 80%;
+    height: 60%;
+    margin: 5% auto;
+    overflow: auto;
+    padding: 20px;
+    position: relative;
+}
+
+#conversation div {
+    margin-bottom: 0;
+    padding: 10px;
+}
+
+#conversation div:first-child {
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+#conversation div:last-child {
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+.user {
+    background-color: #91273E;
+    color: #FAEAEC;
+}
+
+.system {
+    background-color: #a92d4c;
+    color: #FAEAEC;
+}
+
+#chatForm {
+    background-color: #a92d4c;
+    border-radius: 20px;
+    bottom: 10px;
+    left: 50%;
+    padding: 10px;
+    position: fixed;
+    transform: translateX(-50%);
+    width: 80%;
+    display: flex;
+    justify-content: space-between;
+}
+
+#userMessage {
+    background-color: #91273E;
+    border: none;
+    border-radius: 10px;
+    color: #FAEAEC;
+    padding: 10px;
+    width: 70%;
+}
+
+#sendButtonContainer {
+    width: 25%;
+    display: flex;
+    justify-content: flex-end;
+}
+
+button {
+    background-color: #91273E;
+    border: none;
+    border-radius: 10px;
+    color: #FAEAEC;
+    cursor: pointer;
+    padding: 10px 20px;
+    display: flex; /* Add this line */
+    justify-content: center; /* Add this line */
+    align-items: center; /* Add this line */
+}
+
+button img {
+    width: 20px; /* Adjust as needed */
+    height: 20px; /* Adjust as needed */
+}
+button:hover {
+    background-color: #a92d4c;
+}
+#clearButton {
+    background-color: #91273E;
+    border: none;
+    border-radius: 10px;
+    color: #FAEAEC;
+    cursor: pointer;
+    padding: 10px 20px;
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    z-index: 1;
+}
