@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "test": "npx playwright test --reporter=html"
+    "test":  "npx playwright test --reporter=html -j 3",
+    "push":  "git push -u origin main",
+    "commit": "git commit -m 'Auto Commit' "
   },
   "repository": {
     "type": "git",

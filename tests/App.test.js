@@ -23,8 +23,8 @@ test('should send a message', async ({ page }) => {
     await page.waitForTimeout(1000); // Wait for the response from the server
     const messages = await page.$$eval('#conversation div', elements => elements.map(el => el.textContent));
     createChatFile(messages); // Create a new chat.json file
-    const userMessage = messages.find(message => message.includes('USER:'));
-    expect(userMessage).toContain('Hello, world!');
+    const userMessage = messages.find(message => message.startsWith('USER: Hello, world!'));
+    expect(userMessage).toBeTruthy();
   });
 
 test('should clear the conversation', async ({ page }) => {

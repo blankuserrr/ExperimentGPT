@@ -23,19 +23,18 @@ With the Vercel AI SDK, you can build a ChatGPT-like app in just a few lines of 
 
 ```tsx
 // ./app/api/chat/route.js
-import { Configuration, OpenAIApi } from 'openai-edge'
+import OpenAI from 'openai'
 import { OpenAIStream, StreamingTextResponse } from 'ai'
 
-const config = new Configuration({
+const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY
 })
-const openai = new OpenAIApi(config)
 
 export const runtime = 'edge'
 
 export async function POST(req) {
   const { messages } = await req.json()
-  const response = await openai.createChatCompletion({
+  const response = await openai.chat.completions.create({
     model: 'gpt-4',
     stream: true,
     messages
@@ -76,7 +75,7 @@ export default function Chat() {
 
 ---
 
-View the full documentation and examples on [sdk.vercel.ai/docs](https://sdk.vercel.ai/docs)
+View the full documentation and examples on [sdk.vercel.ai/docs](https://sdk.vercel.ai/docs).
 
 ## Authors
 
@@ -88,4 +87,4 @@ This library is created by [Vercel](https://vercel.com) and [Next.js](https://ne
 - Malte Ubl ([@cramforce](https://twitter.com/cramforce)) - [Vercel](https://vercel.com)
 - Justin Ridgewell ([@jridgewell](https://github.com/jridgewell)) - [Vercel](https://vercel.com)
 
-[Contributors](https://github.com/vercel-labs/ai/graphs/contributors)
+[Contributors](https://github.com/vercel/ai/graphs/contributors)
