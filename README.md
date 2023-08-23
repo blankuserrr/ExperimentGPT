@@ -30,9 +30,10 @@ These instructions will get you a copy of the project up and running on your loc
 
 1. Create a `chats` folder in the root directory.
 
-2. Inside the `chats` folder, create a `chat.json` file that contains an empty array: {}
+2. Inside the `chats` folder, create a `chat.json` file that contains an empty array: []
 
-3. In the `tests` folder, create a `Test Chats` folder. Leave this folder empty for now.
+#### Optional set-up for tests using Playwright.
+3. In the `tests` folder, create a `Test Chats` folder. Leave this folder empty for now. (run npm test to run it)
 
 ## Running the Application
 
