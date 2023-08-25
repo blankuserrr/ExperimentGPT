@@ -1,6 +1,6 @@
 # ExperimentGPT
 
-Welcome to the ExperimentGPT project! This is a chat application that uses Playwright for testing. The application is built with JavaScript and uses a simple server for handling requests.
+Welcome to ExperimentGPT! This is a AI Chatbot that uses the ChatGPT API. I Currently it is in early alpha, and should be used as so, and not taken seriously. So far it has simple features such as just sending messages and clearing the conversation. It also uses Playwright for testing, but you might experience issues without root or elevated permissions. The application is built with Node.JS and has a (still being worked on) semi modern frontend without any framework *(pure CSS!)*
 
 ## Getting Started
 
@@ -49,6 +49,15 @@ The application will be available at `http://localhost:3000`.
 To run the tests, use:
 
 ```npm test```
+
+## Future changes/Planned features
+
+* The editing and deleting of messages
+* Use of the OpenAI completions API to stream messages (typing effect) and the stopping of generation
+* Settings for local (in browser) chats
+* Experimental ChatGPT + Pupeteer for browsing the internet without doing anything but typing.
+* Pinecone support
+* Multi API support (Kobold, OpenRouter, Anthropic, (Local LLM support in far future))
 
 ## Contributing
 
