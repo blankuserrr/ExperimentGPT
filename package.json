@@ -7,7 +7,9 @@
     "start": "node index.js",
     "test":  "npx playwright test --reporter=html -j 3",
     "push":  "git push -u origin main",
-    "commit": "git commit -m 'Auto Commit' "
+    "commit": "set /p message=Enter your commit message: && git add . && git commit -m \"%message%\"",
+    "pull": "git pull origin main",
+    "discard": "git checkout ."
   },
   "repository": {
     "type": "git",
