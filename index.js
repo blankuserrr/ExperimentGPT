@@ -11,7 +11,7 @@ const Ai = require("ai");
 dotenv.config();
 
 const app = express();
-app.use(bodyParser.json()); // Use JSON parser for body
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 app.set("view engine", "ejs");
@@ -68,7 +68,7 @@ app.post("/send", async (req, res) => {
 
 // Clear conversation endpoint
 app.post("/clear", (req, res) => {
-  // Clear the messages array
+
   messages = [];
 
   // Clear the chat.json file
