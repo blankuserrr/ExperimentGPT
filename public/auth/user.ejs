@@ -4,7 +4,8 @@
 <head>
     <title>Login/Signup</title>
     <link rel="stylesheet" type="text/css" href="auth.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script async src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script async src="main.js"></script>
 </head>
 
 <body>
@@ -16,22 +17,6 @@
             <button id="submit" type="submit">Login</button>
         </form>
     </div>
-
-    <script>
-        $(document).ready(function () {
-            var isLogin = true;
-            $("#toggleButton").click(function () {
-                isLogin = !isLogin;
-                if (isLogin) {
-                    $("#toggleButton").text("Sign Up");
-                    $("#submit").text("Login");
-                } else {
-                    $("#toggleButton").text("Login");
-                    $("#submit").text("Sign Up");
-                }
-            });
-        });
-    </script>
 </body>
 
 </html>

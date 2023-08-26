@@ -16,7 +16,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 1. Clone the repository:
 
-```git clone https://github.com/Honkychunkymonkey/ExperimentGPT.git```
+`git clone https://github.com/Honkychunkymonkey/ExperimentGPT.git`
 
 2. Navigate to the project directory:
 
@@ -32,15 +32,15 @@ These instructions will get you a copy of the project up and running on your loc
 
 2. Inside the `chats` folder, create a `chat.json` file that contains an empty array: []
 
-#### Optional set-up for tests using Playwright.
-3. In the `tests` folder, create a `Test Chats` folder. Leave this folder empty for now. (run npm test to run it)
+#### Optional set-up for tests using Playwright
+
+In the `tests` folder, create a `Test Chats` folder. Leave this folder empty for now. (run npm test to run it)
 
 ## Running the Application
 
 To start the application, run:
 
 ```npm start```
-
 
 The application will be available at `http://localhost:3000`.
 
@@ -52,12 +52,12 @@ To run the tests, use:
 
 ## Future changes/Planned features
 
-* The editing and deleting of messages
-* Use of the OpenAI completions API to stream messages (typing effect) and the stopping of generation
-* Settings for local (in browser) chats
-* Experimental ChatGPT + Pupeteer for browsing the internet without doing anything but typing.
-* Pinecone support
-* Multi API support (Kobold, OpenRouter, Anthropic, (Local LLM support in far future))
+- The editing and deleting of messages
+- Use of the OpenAI completions API to stream messages (typing effect) and the stopping of generation
+- Settings for local (in browser) chats
+- Experimental ChatGPT + Pupeteer for browsing the internet without doing anything but typing.
+- Pinecone support
+- Multi API support (Kobold, OpenRouter, Anthropic, (Local LLM support in far future))
 
 ## Contributing
 
