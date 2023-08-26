@@ -79,17 +79,18 @@ app.post("/send", async (req, res) => {
     "Tokens total": usageInfo.usedTokens,
   });
 
-  res.json({ messages });
+  // Return the HTML for the new system message
+   res.send(
+     `<div class="system"><strong>SYSTEM:</strong> ${responseContent}</div>`
+   );
 });
 
 // Clear conversation endpoint
 app.post("/clear", async (req, res) => {
   messages = [];
-
-  // Clear the chat in Firestore
-  await db.collection("chats").doc("chat").set({ messages: [] });
-
-  res.json({ success: true });
+  // Save chat history to Firestore
+  await db.collection("chats").doc("chat").set({ messages });
+  res.send(""); // send an empty string as response
 });
 
 app.listen(3000, () => {

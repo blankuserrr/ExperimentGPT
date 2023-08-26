@@ -14,7 +14,7 @@
     </head>
     
 <body>
-    <button id="clearButton">Clear Conversation</button>
+    <button id="clearButton" hx-post="/clear" hx-trigger="click" hx-target="#conversation" hx-swap="innerHTML">Clear Conversation</button>
     <div id="chatContainer">
         <div id="conversation">
             <% messages.forEach((message, index)=> { %>
@@ -28,8 +28,8 @@
                         <% }); %>
         </div>
     </div>
-    </div>
-    <form id="chatForm">
+    <form id="chatForm" hx-post="/send" hx-vars='userMessage:document.getElementById("userMessage").value'
+        hx-trigger="submit" hx-target="#conversation" hx-swap="beforeend">
         <input type="text" name="userMessage" aria-label="Message Input Box" id="userMessage" required>
         <div id="sendButtonContainer">
             <button type="submit">
@@ -37,6 +37,8 @@
             </button>
         </div>
     </form>
+    <script src="https://unpkg.com/htmx.org@1.9.5"></script>
     <script src="/script.js"></script>
 </body>
+
 </html>

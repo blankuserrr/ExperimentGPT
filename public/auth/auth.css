@@ -1,0 +1,74 @@
+body {
+    background-color: #171717;
+    color: #FAEAEC;
+    font-family: 'Noto Sans', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+#chatContainer {
+    background-color: #3c101b;
+    border-radius: 20px;
+    max-width: 80%;
+    height: 60%;
+    margin: 5% auto;
+    overflow: auto;
+    padding: 20px;
+    position: relative;
+}
+
+#userForm {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+#userForm input {
+    background-color: #91273E;
+    border: none;
+    border-radius: 10px;
+    color: #FAEAEC;
+    padding: 10px;
+    margin-bottom: 10px;
+    width: 70%;
+}
+
+#userForm input::placeholder {
+    color: #a6a6a6;
+}
+
+#userForm button {
+    background-color: #91273E;
+    border: none;
+    border-radius: 10px;
+    color: #FAEAEC;
+    cursor: pointer;
+    padding: 10px 20px;
+    width: 70%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#userForm button:hover {
+    background-color: #a92d4c;
+}
+
+#toggleButton {
+    background-color: #91273E;
+    border: none;
+    border-radius: 10px;
+    color: #FAEAEC;
+    cursor: pointer;
+    padding: 10px 20px;
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    z-index: 1;
+}
+
+#toggleButton:hover {
+    background-color: #a92d4c;
+}
