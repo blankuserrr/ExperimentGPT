@@ -17,11 +17,15 @@
     <button id="clearButton">Clear Conversation</button>
     <div id="chatContainer">
         <div id="conversation">
-            <% messages.forEach((message, index) => { %>
-                <% if (!(message.role === 'system' && index === 0)) { %>
-                    <div class="<%= message.role %>"><strong><%= message.role.toUpperCase() %>:</strong> <%= message.content %></div>
-                <% } %>
-            <% }); %>
+            <% messages.forEach((message, index)=> { %>
+                <% if (!(message.role==='system' && message.content==='You are a helpful assistant.' )) { %>
+                    <div class="<%= message.role %>"><strong>
+                            <%= message.role.toUpperCase() %>:
+                        </strong>
+                        <%= message.content %>
+                    </div>
+                    <% } %>
+                        <% }); %>
         </div>
     </div>
     </div>
