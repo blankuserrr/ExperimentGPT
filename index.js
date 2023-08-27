@@ -91,9 +91,9 @@ app.post("/send", async (req, res) => {
   });
 
   // Return the HTML for the new system message
-   res.send(
-     `<div class="system"><strong>SYSTEM:</strong> ${responseContent}</div>`
-   );
+  res.send(
+    `<div class="system"><strong>SYSTEM:</strong> ${responseContent}</div>`
+  );
 });
 
 // Clear conversation endpoint

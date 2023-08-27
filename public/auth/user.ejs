@@ -4,8 +4,29 @@
 <head>
     <title>Login/Signup</title>
     <link rel="stylesheet" type="text/css" href="auth.css">
-    <script async src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script async src="main.js"></script>
+    <script async src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.slim.min.js"></script>
+    <script async>
+        function loadJQ() {
+            $(document).ready(function ( ) {
+                var isLogin = true;
+                $("#toggleButton").click(function () {
+                    isLogin = !isLogin;
+                    if (isLogin) {
+                        $("#toggleButton").text("Sign Up");
+                        $("#submit").text("Login");
+                    } else {
+                        $("#toggleButton").text("Login");
+                        $("#submit").text("Sign Up");
+                    }
+                });
+            });
+        }
+        if (window.jQuery) {
+            loadJQ();
+        } else {
+            window.addEventListener('load', loadJQ);
+        }
+    </script>
 </head>
 
 <body>
