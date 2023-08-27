@@ -19,7 +19,8 @@ app.use(
     contentSecurityPolicy: {
       directives: {
         defaultSrc: ["'self'"],
-        scriptSrc: ["'self'", "https://unpkg.com"]
+        scriptSrc: ["'self'", "https://unpkg.com", "'unsafe-eval'"],
+        // Add other directives as needed
       },
     },
   })
