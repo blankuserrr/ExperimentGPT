@@ -14,7 +14,16 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
-app.use(helmet());
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'", "https://unpkg.com"]
+      },
+    },
+  })
+);
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "public"));
 
