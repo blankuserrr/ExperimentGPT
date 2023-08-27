@@ -18,13 +18,13 @@ app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "public"));
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCCwswtxlhhz38QPGZh8232WWhpMC9o-0E",
-  authDomain: "experimentgpt-b7411.firebaseapp.com",
-  projectId: "experimentgpt-b7411",
-  storageBucket: "experimentgpt-b7411.appspot.com",
-  messagingSenderId: "575444930797",
-  appId: "1:575444930797:web:08f7e8485b1f9dab3ffce4",
-  measurementId: "G-ZVH7JCEMC3",
+  apiKey: process.env.FIREBASE_API_KEY,
+  authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.FIREBASE_PROJECT_ID,
+  storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.FIREBASE_APP_ID,
+  measurementId: process.env.FIREBASE_MEASUREMENT_ID,
 };
 
 firebase.initializeApp(firebaseConfig);
