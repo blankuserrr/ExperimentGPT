@@ -4,9 +4,9 @@ const dotenv = require("dotenv");
 const { Configuration, OpenAIApi } = require("openai");
 const cors = require("cors");
 const { GPTTokens } = require("gpt-tokens");
-const Ai = require("ai");
 const firebase = require("firebase");
 const path = require("path");
+const helmet = require("helmet");
 
 dotenv.config();
 
@@ -14,6 +14,7 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
+app.use(helmet());
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "public"));
 

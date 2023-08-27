@@ -30,7 +30,6 @@
   "homepage": "https://github.com/Honkychunkymonkey/NJSChatAiTest#readme",
   "dependencies": {
     "@fortaine/openai": "^5.3.1",
-    "ai": "^2.1.33",
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
@@ -39,6 +38,7 @@
     "firebase": "^8.10.0",
     "fs": "^0.0.1-security",
     "gpt-tokens": "^1.1.2",
+    "helmet": "^7.0.0",
     "openai": "^3.3.0",
     "path": "^0.12.7"
   },
