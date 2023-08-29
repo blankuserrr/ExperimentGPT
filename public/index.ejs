@@ -9,11 +9,14 @@
         <title>ExperimentGPT</title>
         <link rel="icon" type="image/x-icon" href="assets/favicon/favicon.webp">
         <link rel="stylesheet" href="/styles.css" async>
-        <link rel="preload" href="https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'"> <!-- Noto Sans font -->
+        <link rel="preload" href="https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap" as="style">
         <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap"></noscript> <!-- Fallback for no JavaScript -->
     </head>
     
 <body>
+    <form id="logoutForm" action="/logout" method="post">
+  <button type="submit">Logout</button>
+</form>
     <button id="clearButton" hx-post="/clear" hx-trigger="click" hx-target="#conversation" hx-swap="innerHTML">Clear Conversation</button>
     <div id="chatContainer">
         <div id="conversation">

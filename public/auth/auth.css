@@ -17,7 +17,7 @@ body {
     position: relative;
 }
 
-#userForm {
+#authForm {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -25,7 +25,7 @@ body {
     height: 100%;
 }
 
-#userForm input {
+#authForm input {
     background-color: #91273E;
     border: none;
     border-radius: 10px;
@@ -35,11 +35,11 @@ body {
     width: 70%;
 }
 
-#userForm input::placeholder {
+#authForm input::placeholder {
     color: #a6a6a6;
 }
 
-#userForm button {
+#authForm button {
     background-color: #91273E;
     border: none;
     border-radius: 10px;
@@ -52,7 +52,7 @@ body {
     align-items: center;
 }
 
-#userForm button:hover {
+#authForm button:hover {
     background-color: #a92d4c;
 }
 

@@ -1,43 +1,22 @@
 <!DOCTYPE html>
 <html>
-
-<head>
+  <head>
     <title>Login/Signup</title>
-    <link rel="stylesheet" type="text/css" href="auth.css">
-    <script async src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.slim.min.js"></script>
-    <script async>
-        function loadJQ() {
-            $(document).ready(function ( ) {
-                var isLogin = true;
-                $("#toggleButton").click(function () {
-                    isLogin = !isLogin;
-                    if (isLogin) {
-                        $("#toggleButton").text("Sign Up");
-                        $("#submit").text("Login");
-                    } else {
-                        $("#toggleButton").text("Login");
-                        $("#submit").text("Sign Up");
-                    }
-                });
-            });
-        }
-        if (window.jQuery) {
-            loadJQ();
-        } else {
-            window.addEventListener('load', loadJQ);
-        }
-    </script>
-</head>
-
-<body>
+    <link rel="stylesheet" type="text/css" href="/auth/auth.css" />
+    <script
+      async
+      src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"
+    ></script>
+    <script async src="/auth/auth.js"></script>
+  </head>
+  <body>
     <div id="chatContainer">
-        <button id="toggleButton" class="system">Sign Up</button>
-        <form id="userForm">
-            <input id="username" type="text" placeholder="Username" required>
-            <input id="password" type="password" placeholder="Password" required>
-            <button id="submit" type="submit">Login</button>
-        </form>
+      <button id="toggleButton" class="system">Sign Up</button>
+      <form id="authForm">
+        <input id="username" type="text" placeholder="Username" required />
+        <input id="password" type="password" placeholder="Password" required />
+        <button id="authSubmit" type="submit">Login</button>
+      </form>
     </div>
-</body>
-
+  </body>
 </html>

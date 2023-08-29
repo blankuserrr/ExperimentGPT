@@ -4,7 +4,9 @@ const dotenv = require("dotenv");
 const { Configuration, OpenAIApi } = require("openai");
 const cors = require("cors");
 const { GPTTokens } = require("gpt-tokens");
-const firebase = require("firebase");
+const firebase = require("firebase/app");
+require("firebase/auth");
+require("firebase/firestore");
 const path = require("path");
 const helmet = require("helmet");
 
@@ -19,8 +21,12 @@ app.use(
     contentSecurityPolicy: {
       directives: {
         defaultSrc: ["'self'"],
-        scriptSrc: ["'self'", "https://unpkg.com", "'unsafe-eval'"],
-        // Add other directives as needed
+        scriptSrc: [
+          "'self'",
+          "https://unpkg.com",
+          "'unsafe-eval'",
+          "https://cdnjs.cloudflare.com",
+        ],
       },
     },
   })
@@ -49,7 +55,16 @@ const openai = new OpenAIApi(configuration);
 
 let messages = [];
 
-app.get("/", async (req, res) => {
+const checkAuth = (req, res, next) => {
+  const user = firebase.auth().currentUser;
+  if (user) {
+    next();
+  } else {
+    res.redirect("/login");
+  }
+};
+
+app.get("/", checkAuth, async (req, res) => {
   const chatDoc = await db.collection("chats").doc("chat").get();
   if (chatDoc.exists) {
     messages = chatDoc.data().messages;
@@ -59,9 +74,13 @@ app.get("/", async (req, res) => {
   res.render("index", { messages });
 });
 
+app.get("/login", (req, res) => {
+  res.render("auth/user");
+});
+
 app.use(express.static(path.join(__dirname, "public")));
 
-app.post("/send", async (req, res) => {
+app.post("/send", checkAuth, async (req, res) => {
   const userMessage = req.body.userMessage;
   messages.push(
     { role: "system", content: "You are a helpful assistant." },
@@ -97,11 +116,46 @@ app.post("/send", async (req, res) => {
 });
 
 // Clear conversation endpoint
-app.post("/clear", async (req, res) => {
+app.post("/clear", checkAuth, async (req, res) => {
   messages = [];
   // Save chat history to Firestore
   await db.collection("chats").doc("chat").set({ messages });
   res.send(""); // send an empty string as response
+});
+
+app.post("/register", async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    await firebase.auth().createUserWithEmailAndPassword(email, password);
+    res.status(200).send(); // Send a 200 status code for success
+  } catch (error) {
+    res.status(400).send(error.message); // Send the error message for the client to handle
+  }
+});
+
+app.post("/login", async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    await firebase.auth().signInWithEmailAndPassword(email, password);
+    res.status(200).send(); // Send a 200 status code for success
+  } catch (error) {
+    res.status(400).send(error.message); // Send the error message for the client to handle
+  }
+});
+
+app.post("/logout", checkAuth, async (req, res) => {
+  try {
+    await firebase.auth().signOut();
+    res.redirect("/login"); // Redirect to the login page
+  } catch (error) {
+    res.status(400).send(error.message); // Send the error message for the client to handle
+  }
+});
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send("Something broke!");
 });
 
 app.listen(3000, () => {

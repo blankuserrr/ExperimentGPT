@@ -5,3 +5,10 @@ document.body.addEventListener("htmx:beforeRequest", function (evt) {
     conversation.innerHTML += `<div class="user"><strong>USER:</strong> ${userMessage}</div>`;
   }
 });
+window.addEventListener("load", function () {
+  var link = document.querySelector('link[rel="preload"]');
+  if (link) {
+    link.onload = null;
+    link.rel = "stylesheet";
+  }
+});
