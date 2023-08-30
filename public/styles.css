@@ -118,3 +118,39 @@ button:hover {
 #logoutForm:hover {
     background-color: #a92d4c;
 }
+
+#chats {
+    width: 200px;
+    margin: 20px auto;
+}
+
+#chats select {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 10px;
+    background-color: #91273E;
+    color: #FAEAEC;
+    font-size: 16px;
+}
+
+#chats select:focus {
+    outline: none;
+}
+#createChatForm {
+    background-color: #91273E;
+    border: none;
+    border-radius: 10px;
+    color: #FAEAEC;
+    cursor: pointer;
+    padding: 10px 20px;
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    z-index: 1;
+    padding: 0; 
+}
+
+#createChatForm:hover {
+    background-color: #a92d4c;
+}
