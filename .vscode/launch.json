@@ -3,7 +3,7 @@
     "configurations": [
 
         {
-            "command": "npm start",
+            "command": "node index.js | npx pino-pretty",
             "name": "Start server",
             "request": "launch",
             "type": "node-terminal"

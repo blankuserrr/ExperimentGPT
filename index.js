@@ -5,14 +5,20 @@ const cors = require("cors");
 const path = require("path");
 const helmet = require("helmet");
 const session = require("express-session");
-const routes = require("./routes"); // Import the routes
+const routes = require("./routes");
+const pino = require("pino");
+const logger = require("pino-http");
 
 dotenv.config();
+
+const standaloneLogger = pino({ level: "warn" });
+const httpLogger = logger({ autoLogging: false });
 
 const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
+app.use(httpLogger);
 app.use(
   session({
     secret: "your secret key",
@@ -41,17 +47,18 @@ app.set("views", path.join(__dirname, "public"));
 
 const db = require("./firebaseConfig");
 
-app.use(express.static(path.join(__dirname, "public"))); 
+app.use(express.static(path.join(__dirname, "public")));
 app.use("/chats", express.static(path.join(__dirname, "public/chats")));
 
 app.use("/", routes); // Use the routes
 
 // Error handling middleware
 app.use((err, req, res, next) => {
-  console.error(err.stack);
+  req.log.error(err.stack);
   res.status(500).send("Something broke!");
 });
 
 app.listen(3000, () => {
-  console.log("Server is running on port 3000");
+  console.log("Server is now running at port 3000!");
 });
+ 

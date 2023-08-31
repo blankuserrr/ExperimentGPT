@@ -25,8 +25,22 @@ const checkAuth = (req, res, next) => {
 router.get("/", checkAuth, async (req, res) => {
   const userRef = db.collection("users").doc(req.uid);
   const userDoc = await userRef.get();
-  const chats = userDoc.exists ? userDoc.data().chats : [];
-  res.render("chats/chats", { chats });
+  const chatIds = userDoc.exists ? userDoc.data().chats : [];
+  const chats = await Promise.all(
+    chatIds.map(async (chatId) => {
+      const chatRef = db.collection("chats").doc(chatId);
+      const chatDoc = await chatRef.get();
+      if (chatDoc.exists) {
+        return { id: chatId, name: chatDoc.data().name };
+      } else {
+        // If the chat document does not exist, return null
+        return null;
+      }
+    })
+  );
+  // Filter out null values
+  const existingChats = chats.filter((chat) => chat !== null);
+  res.render("chats/chats", { chats: existingChats });
 });
 
 router.get("/chat/:chatId", checkAuth, async (req, res) => {
@@ -94,7 +108,7 @@ router.post("/register", async (req, res) => {
     await userRef.set({ chats: [] });
     res.status(200).send();
   } catch (error) {
-    console.error(error);
+    req.log.error(error);
     res.status(500).send("Error registering user");
   }
 });
@@ -108,8 +122,8 @@ router.post("/login", async (req, res) => {
     req.session.userId = userCredential.user.uid; // Save user ID in session
     res.status(200).send();
   } catch (error) {
-    console.error(error);
-    res.status(500).send("Error logging in");
+    req.log.error(error);
+    res.status(500).send("Error logging out");
   }
 });
 
@@ -126,9 +140,6 @@ router.post("/logout", checkAuth, async (req, res) => {
 
 router.post("/createChat", checkAuth, async (req, res) => {
   try {
-    // Create a new chat with a randomly generated ID
-    const chatRef = db.collection("chats").doc();
-
     // Get the current date and time
     const now = new Date();
     // Format the date and time as d-m-y:time
@@ -136,6 +147,10 @@ router.post("/createChat", checkAuth, async (req, res) => {
       now.getMonth() + 1
     }-${now.getFullYear()}:${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`;
 
+    // Create a unique ID for the chat
+    const chatId = db.collection("chats").doc().id;
+
+    const chatRef = db.collection("chats").doc(chatId);
     await chatRef.set({ messages: [], name: chatName });
     const userRef = db.collection("users").doc(req.uid);
     await userRef.update({

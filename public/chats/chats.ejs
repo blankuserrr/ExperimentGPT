@@ -7,7 +7,7 @@
   <meta name="description" content="A smart, complex, and easy to use AI Chatbot. Made in collaboration with OpenAI.">
   <title>Chats</title>
   <link rel="icon" type="image/x-icon" href="/assets/favicon/favicon.webp">
-  <link rel="stylesheet" href="/styles.css" async>
+  <link rel="stylesheet" href="/chats/chats.css" async>
   <link rel="preload" href="https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap" as="style">
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap"></noscript> <!-- Fallback for no JavaScript -->
 </head>
@@ -19,15 +19,14 @@
     <button type="submit">Create Chat</button>
   </form>
   <div id="chats">
-    <select id="chatSelect">
-      <option selected disabled>Select a chat</option>
-      <% chats.forEach((chatId) => { %>
-        <option value="/chat/<%= chatId %>">Chat <%= chatId %></option>
+    <button id="chatSelect">Select a chat</button>
+    <div id="chatDropdown" class="dropdown-content">
+      <% chats.forEach((chat) => { %>
+        <a href="/chat/<%= chat.id %>"><%= chat.name %></a>
       <% }); %>
-    </select>
-    <button id="goToChat">Go to Chat</button>
+    </div>
   </div>
-    <script src="https://unpkg.com/htmx.org@1.9.5"></script>
-    <script src="/chats/chat.js"></script>
-  </body>
+  <script src="https://unpkg.com/htmx.org@1.9.5"></script>
+  <script src="/chats/chat.js"></script>
+</body>
 </html>

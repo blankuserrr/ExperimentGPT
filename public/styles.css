@@ -32,14 +32,22 @@ body {
     border-bottom-right-radius: 10px;
 }
 
-.user {
+.user,
+.system {
     background-color: #91273E;
     color: #FAEAEC;
 }
 
+.user:hover {
+    background-color: #b33a53;
+}
+
+.system:hover {
+    background-color: #b93a56;
+}
+
 .system {
     background-color: #a92d4c;
-    color: #FAEAEC;
 }
 
 #chatForm {
@@ -83,74 +91,42 @@ button {
 }
 
 button img {
-    width: 20px; 
-    height: 20px; 
+    width: 20px;
+    height: 20px;
 }
+
 button:hover {
     background-color: #a92d4c;
 }
-#clearButton {
-    background-color: #91273E;
+
+#clearButton,
+#logoutForm {
     border: none;
     border-radius: 10px;
     color: #FAEAEC;
     cursor: pointer;
     padding: 10px 20px;
     position: absolute;
-    right: 20px;
-    top: 20px;
     z-index: 1;
 }
+
+#clearButton {
+    right: 20px;
+    top: 20px;
+}
+
 #logoutForm {
-    background-color: #91273E;
-    border: none;
-    border-radius: 10px;
-    color: #FAEAEC;
-    cursor: pointer;
-    padding: 10px 20px;
-    position: absolute;
     left: 20px;
     top: 20px;
-    z-index: 1;
-    padding: 0; 
+    padding: 0;
 }
 
 #logoutForm:hover {
     background-color: #a92d4c;
 }
 
-#chats {
-    width: 200px;
-    margin: 20px auto;
-}
-
-#chats select {
-    width: 100%;
-    padding: 10px;
-    border: none;
-    border-radius: 10px;
-    background-color: #91273E;
-    color: #FAEAEC;
-    font-size: 16px;
-}
-
-#chats select:focus {
-    outline: none;
-}
-#createChatForm {
-    background-color: #91273E;
-    border: none;
-    border-radius: 10px;
-    color: #FAEAEC;
-    cursor: pointer;
-    padding: 10px 20px;
+#toChats {
     position: absolute;
-    right: 20px;
-    top: 20px;
-    z-index: 1;
-    padding: 0; 
-}
-
-#createChatForm:hover {
-    background-color: #a92d4c;
+    left: 0;
+    bottom: 10px;
 }

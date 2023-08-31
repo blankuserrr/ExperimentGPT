@@ -1,0 +1,117 @@
+body {
+    background-color: #171717;
+    color: #FAEAEC;
+    font-family: 'Noto Sans', sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+}
+
+button {
+    background-color: #91273E;
+    border: none;
+    border-radius: 10px;
+    color: #FAEAEC;
+    cursor: pointer;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+button img {
+    width: 20px;
+    height: 20px;
+}
+
+button:hover {
+    background-color: #a92d4c;
+}
+
+#logoutForm,
+#createChatForm {
+    border: none;
+    border-radius: 10px;
+    color: #FAEAEC;
+    cursor: pointer;
+    padding: 10px 20px;
+    position: absolute;
+    z-index: 1;
+}
+
+#logoutForm {
+    left: 20px;
+    top: 20px;
+    padding: 0;
+}
+
+#logoutForm:hover,
+#createChatForm:hover {
+    background-color: #a92d4c;
+}
+
+#chats {
+    position: relative;
+    display: inline-block;
+}
+
+#chats select {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 10px;
+    background-color: #91273E;
+    color: #FAEAEC;
+    font-size: 16px;
+}
+
+#chats select:focus {
+    outline: none;
+}
+
+#createChatForm {
+    right: 20px;
+    top: 20px;
+    padding: 0;
+}
+
+#chatSelect {
+    background-color: #91273E;
+    color: #FAEAEC;
+    padding: 15px 25px;
+    font-size: 18px;
+    border: none;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    cursor: pointer;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #91273E;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    padding: 15px 20px;
+    font-size: 22px;
+}
+
+.dropdown-content a {
+    color: #FAEAEC;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    white-space: nowrap;
+}
+
+.dropdown-content a:hover {
+    background-color: #a92d4c;
+}

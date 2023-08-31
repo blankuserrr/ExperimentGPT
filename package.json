@@ -45,6 +45,9 @@
     "http": "^0.0.1-security",
     "https": "^1.0.0",
     "openai": "^3.3.0",
-    "path": "^0.12.7"
+    "path": "^0.12.7",
+    "pino": "^8.15.0",
+    "pino-http": "^8.4.0",
+    "pino-pretty": "^10.2.0"
   }
 }

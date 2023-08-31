@@ -18,3 +18,6 @@ window.addEventListener("load", function () {
     link.rel = "stylesheet";
   }
 });
+document.getElementById("toChats").addEventListener("click", function () {
+  window.location = "/";
+});
