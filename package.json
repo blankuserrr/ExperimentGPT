@@ -29,7 +29,6 @@
   },
   "homepage": "https://github.com/Honkychunkymonkey/NJSChatAiTest#readme",
   "dependencies": {
-    "@fortaine/openai": "^5.3.1",
     "@google-cloud/connect-firestore": "^2.0.2",
     "@google-cloud/firestore": "^6.7.0",
     "body-parser": "^1.20.2",

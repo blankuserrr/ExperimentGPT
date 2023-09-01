@@ -3,7 +3,7 @@ const router = express.Router();
 const OpenAI = require("openai");
 const { GPTTokens } = require("gpt-tokens");
 
-const { firestore, firebase } = require("./firebaseConfig");
+const { firestore, auth } = require("./firebaseConfig");
 const { FieldValue } = require("@google-cloud/firestore");
 
 const systemPrompt = "You are a helpful assistant.";
@@ -120,10 +120,9 @@ router.post("/login", async (req, res) => {
     res.status(500).send("Error logging out");
   }
 });
-
 router.post("/logout", checkAuth, async (req, res) => {
   try {
-    await firebase.auth().signOut();
+    await auth.signOut();
     req.session.destroy(); // Clear session
     res.redirect("/login");
   } catch (error) {
