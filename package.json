@@ -42,7 +42,7 @@
     "google-gax": "^4.0.3",
     "gpt-tokens": "^1.1.2",
     "helmet": "^7.0.0",
-    "openai": "^3.3.0",
+    "openai": "^4.4.0",
     "path": "^0.12.7",
     "pino": "^8.15.0",
     "pino-http": "^8.4.0",
