@@ -30,13 +30,28 @@ window.addEventListener("click", function (event) {
   }
 });
 var chatLinks = document.querySelectorAll("#chatDropdown a");
-  chatLinks.forEach(function (link) {
-    // Add event listener to each link
-    link.addEventListener("click", function (event) {
-      // If alt key is pressed, prevent default behavior and trigger HTMX request
-      if (event.altKey) {
-        event.preventDefault();
-        htmx.trigger(link, 'htmx:hx');
-      }
-    });
+chatLinks.forEach(function (link) {
+  // Add event listener to each link
+  link.addEventListener("click", function (event) {
+    // If alt key is pressed, prevent default behavior and trigger HTMX request
+    if (event.altKey) {
+      event.preventDefault();
+      htmx.trigger(link, "htmx:hx");
+    }
   });
+});
+// Get all chat links
+var chatLinks = document.querySelectorAll("#chatDropdown a");
+chatLinks.forEach(function (link) {
+  // Add event listener to each link
+  link.addEventListener("click", function (event) {
+    // If alt key is pressed, prevent default behavior and trigger HTMX request
+    if (event.altKey) {
+      event.preventDefault();
+      link.setAttribute("hx-post", "/deleteChat");
+      link.setAttribute("hx-swap", "outerHTML");
+      link.setAttribute("hx-vals", `{"chatId": "${link.id}"}`);
+      htmx.trigger(link, "htmx:hx");
+    }
+  });
+});
