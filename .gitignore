@@ -2,11 +2,6 @@
 *.replit
 replit.nix
 
-# Test resuklts
-/tests/Test Chats/*.json
-/playwright-report
-/playwright-report/*.html
-
 # Logs
 logs
 *.log
@@ -27,3 +22,4 @@ node_modules/
 
 # ide specifc files
 *.vscode
+node_modules
