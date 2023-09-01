@@ -3,7 +3,8 @@ const router = express.Router();
 const { Configuration, OpenAIApi } = require("openai");
 const { GPTTokens } = require("gpt-tokens");
 
-const { db, firebase } = require("./firebaseConfig");
+const { firestore, firebase } = require("./firebaseConfig");
+const { FieldValue } = require("@google-cloud/firestore");
 
 const systemPrompt = "You are a helpful assistant.";
 
@@ -23,12 +24,12 @@ const checkAuth = (req, res, next) => {
 
 // Define your routes here
 router.get("/", checkAuth, async (req, res) => {
-  const userRef = db.collection("users").doc(req.uid);
+  const userRef = firestore.doc(`users/${req.uid}`);
   const userDoc = await userRef.get();
   const chatIds = userDoc.exists ? userDoc.data().chats : [];
   const chats = await Promise.all(
     chatIds.map(async (chatId) => {
-      const chatRef = db.collection("chats").doc(chatId);
+      const chatRef = firestore.collection("chats").doc(chatId);
       const chatDoc = await chatRef.get();
       if (chatDoc.exists) {
         return { id: chatId, name: chatDoc.data().name };
@@ -44,7 +45,7 @@ router.get("/", checkAuth, async (req, res) => {
 });
 
 router.get("/chat/:chatId", checkAuth, async (req, res) => {
-  const chatRef = db.collection("chats").doc(req.params.chatId);
+  const chatRef = firestore.doc(`chats/${req.params.chatId}`);
   const chatDoc = await chatRef.get();
   const messages = chatDoc.exists ? chatDoc.data().messages : [];
   res.render("index", {
@@ -60,7 +61,7 @@ router.get("/login", (req, res) => {
 
 router.post("/sendMessage/:chatId", checkAuth, async (req, res) => {
   const userMessage = req.body.userMessage;
-  const chatRef = db.collection("chats").doc(req.params.chatId);
+  const chatRef = firestore.collection("chats").doc(req.params.chatId);
   const chatDoc = await chatRef.get();
   let messages = chatDoc.exists ? chatDoc.data().messages : [];
 
@@ -104,7 +105,7 @@ router.post("/register", async (req, res) => {
       .auth()
       .createUserWithEmailAndPassword(email, password);
     const uid = userCredential.user.uid;
-    const userRef = db.collection("users").doc(uid);
+    const userRef = firestore.doc(`users/${uid}`);
     await userRef.set({ chats: [] });
     res.status(200).send();
   } catch (error) {
@@ -148,13 +149,13 @@ router.post("/createChat", checkAuth, async (req, res) => {
     }-${now.getFullYear()}:${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`;
 
     // Create a unique ID for the chat
-    const chatId = db.collection("chats").doc().id;
+    const chatId = firestore.collection("chats").doc().id;
 
-    const chatRef = db.collection("chats").doc(chatId);
+    const chatRef = firestore.doc(`chats/${chatId}`);
     await chatRef.set({ messages: [], name: chatName });
-    const userRef = db.collection("users").doc(req.uid);
+    const userRef = firestore.doc(`users/${req.uid}`);
     await userRef.update({
-      chats: firebase.firestore.FieldValue.arrayUnion(chatRef.id),
+      chats: FieldValue.arrayUnion(chatRef.id), // Use FieldValue
     });
     res.redirect(`/chat/${chatRef.id}`);
   } catch (error) {
@@ -166,10 +167,10 @@ router.post("/createChat", checkAuth, async (req, res) => {
 router.post("/deleteChat", checkAuth, async (req, res) => {
   const chatId = req.body.chatId;
   try {
-    await db.collection("chats").doc(chatId).delete();
-    const userRef = db.collection("users").doc(req.uid);
+    await firestore.collection("chats").doc(chatId).delete();
+    const userRef = firestore.doc(`users/${req.uid}`);
     await userRef.update({
-      chats: firebase.firestore.FieldValue.arrayRemove(chatId),
+      chats: FieldValue.arrayRemove(chatId), // Use FieldValue
     });
     res.status(200).send();
   } catch (error) {
@@ -180,7 +181,7 @@ router.post("/deleteChat", checkAuth, async (req, res) => {
 
 router.get("/getChats", checkAuth, async (req, res) => {
   try {
-    const userRef = db.collection("users").doc(req.uid);
+    const userRef = firestore.doc(`users/${req.uid}`);
     const userDoc = await userRef.get();
     const chats = userDoc.exists ? userDoc.data().chats : [];
     res.status(200).send(chats);
@@ -191,10 +192,26 @@ router.get("/getChats", checkAuth, async (req, res) => {
 });
 
 router.post("/clearChat/:chatId", checkAuth, async (req, res) => {
-  const chatRef = db.collection("chats").doc(req.params.chatId);
-  // Set the messages of the chat to an empty array
-  await chatRef.set({ messages: [] });
+  const chatRef = firestore.doc(`chats/${req.params.chatId}`);
+  const chatDoc = await chatRef.get();
+  const chatName = chatDoc.exists ? chatDoc.data().name : "";
+  // Set the messages of the chat to an empty array and preserve the name
+  await chatRef.set({ messages: [], name: chatName });
   res.status(200).send();
 });
 
+router.post("/deleteChat", checkAuth, async (req, res) => {
+  const chatId = req.body.chatId;
+  try {
+    await firestore.collection("chats").doc(chatId).delete();
+    const userRef = firestore.doc(`users/${req.uid}`);
+    await userRef.update({
+      chats: FieldValue.arrayRemove(chatId), // Use FieldValue
+    });
+    res.status(200).send();
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error deleting chat");
+  }
+});
 module.exports = router;

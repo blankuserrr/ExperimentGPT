@@ -22,8 +22,8 @@
     <button id="chatSelect">Select a chat</button>
     <div id="chatDropdown" class="dropdown-content">
       <% chats.forEach((chat) => { %>
-        <a href="/chat/<%= chat.id %>"><%= chat.name %></a>
-      <% }); %>
+  <a href="/chat/<%= chat.id %>" hx-post="/deleteChat" hx-swap="outerHTML" hx-vals='{"chatId": "<%= chat.id %>"}'><%= chat.name %></a>
+<% }); %>
     </div>
   </div>
   <script src="https://unpkg.com/htmx.org@1.9.5"></script>

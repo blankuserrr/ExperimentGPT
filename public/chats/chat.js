@@ -29,3 +29,14 @@ window.addEventListener("click", function (event) {
     button.style.borderBottomRightRadius = "10px";
   }
 });
+var chatLinks = document.querySelectorAll("#chatDropdown a");
+  chatLinks.forEach(function (link) {
+    // Add event listener to each link
+    link.addEventListener("click", function (event) {
+      // If alt key is pressed, prevent default behavior and trigger HTMX request
+      if (event.altKey) {
+        event.preventDefault();
+        htmx.trigger(link, 'htmx:hx');
+      }
+    });
+  });

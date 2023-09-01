@@ -1,6 +1,6 @@
 const firebase = require("firebase/app");
 require("firebase/auth");
-require("firebase/firestore");
+const { Firestore } = require("@google-cloud/firestore");
 const dotenv = require("dotenv");
 
 dotenv.config();
@@ -17,6 +17,10 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 
-const db = firebase.firestore();
+const firestore = new Firestore({
+  projectId: process.env.FIREBASE_PROJECT_ID,
+  keyFilename:
+    "secrets/experimentgpt-b7411-firebase-adminsdk-k8f78-d5b8e11e63.json",
+});
 
-module.exports = { db, firebase };
+module.exports = { firestore, firebase };

@@ -114,4 +114,5 @@ button:hover {
 
 .dropdown-content a:hover {
     background-color: #a92d4c;
+    border-radius: 10px;
 }

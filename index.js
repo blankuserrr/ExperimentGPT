@@ -5,9 +5,12 @@ const cors = require("cors");
 const path = require("path");
 const helmet = require("helmet");
 const session = require("express-session");
+const { Firestore } = require("@google-cloud/firestore");
+const { FirestoreStore } = require("@google-cloud/connect-firestore");
 const routes = require("./routes");
 const pino = require("pino");
 const logger = require("pino-http");
+const { firestore } = require("./firebaseConfig"); // Import firestore from firebaseConfig.js
 
 dotenv.config();
 
@@ -21,31 +24,18 @@ app.use(cors());
 app.use(httpLogger);
 app.use(
   session({
-    secret: "your secret key",
+    store: new FirestoreStore({
+      dataset: firestore, // Use the firestore instance from firebaseConfig.js
+      kind: "express-sessions",
+    }),
+    secret: "test123",
     resave: false,
     saveUninitialized: true,
     cookie: { secure: false }, // set to true if your using https
   })
 );
-app.use(
-  helmet({
-    contentSecurityPolicy: {
-      directives: {
-        defaultSrc: ["'self'"],
-        scriptSrc: [
-          "'self'",
-          "https://unpkg.com",
-          "'unsafe-eval'",
-          "https://cdnjs.cloudflare.com",
-        ],
-      },
-    },
-  })
-);
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "public"));
-
-const db = require("./firebaseConfig");
 
 app.use(express.static(path.join(__dirname, "public")));
 app.use("/chats", express.static(path.join(__dirname, "public/chats")));
@@ -61,4 +51,3 @@ app.use((err, req, res, next) => {
 app.listen(3000, () => {
   console.log("Server is now running at port 3000!");
 });
- 
