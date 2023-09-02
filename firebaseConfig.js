@@ -1,5 +1,5 @@
-const { initializeApp } = require("firebase/app");
-const { getAuth } = require("firebase/auth");
+const firebase = require("firebase/app");
+require("firebase/auth");
 const { Firestore } = require("@google-cloud/firestore");
 const dotenv = require("dotenv");
 
@@ -15,8 +15,7 @@ const firebaseConfig = {
   measurementId: process.env.FIREBASE_MEASUREMENT_ID,
 };
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+firebase.initializeApp(firebaseConfig);
 
 const firestore = new Firestore({
   projectId: process.env.FIREBASE_PROJECT_ID,
@@ -24,4 +23,4 @@ const firestore = new Firestore({
     "secrets/experimentgpt-b7411-firebase-adminsdk-k8f78-d5b8e11e63.json",
 });
 
-module.exports = { firestore, auth };
+module.exports = { firestore, firebase };

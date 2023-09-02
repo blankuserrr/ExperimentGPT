@@ -49,7 +49,7 @@ app.set("views", path.join(__dirname, "public"));
 app.use(express.static(path.join(__dirname, "public")));
 app.use("/chats", express.static(path.join(__dirname, "public/chats")));
 
-app.use("/", routes); 
+app.use("/", routes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
