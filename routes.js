@@ -3,12 +3,12 @@ const router = express.Router();
 const OpenAI = require("openai");
 const { GPTTokens } = require("gpt-tokens");
 
-const { firestore, firebase } = require("./firebaseConfig");
+const { firestore, auth } = require("./firebaseConfig");
 const { FieldValue } = require("@google-cloud/firestore");
 
 const systemPrompt = "You are a helpful assistant.";
 
-const openai = new OpenAI({
+const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
@@ -33,12 +33,10 @@ router.get("/", checkAuth, async (req, res) => {
       if (chatDoc.exists) {
         return { id: chatId, name: chatDoc.data().name };
       } else {
-        // If the chat document does not exist, return null
         return null;
       }
     })
   );
-  // Filter out null values
   const existingChats = chats.filter((chat) => chat !== null);
   res.render("chats/chats", { chats: existingChats });
 });
@@ -69,27 +67,17 @@ router.post("/sendMessage/:chatId", checkAuth, async (req, res) => {
     { role: "user", content: userMessage }
   );
 
-  const stream = await openai.chat.completions.create({
-    model: "gpt-3.5-turbo",
-    messages: [{ role: "user", content: userMessage }],
-    stream: true,
+  const chatCompletion = await openai.createChatCompletion({
+    model: "gpt-3.5-turbo-0613",
+    messages: messages,
   });
 
-  let responseContent = "";
-  for await (const part of stream) {
-    const newPart = part.choices[0]?.delta?.content || "";
-    responseContent += newPart;
-    req.io.emit("new message", newPart);
-  }
-
+  const responseContent = chatCompletion.data.choices[0].message.content;
   messages.push({ role: "system", content: responseContent });
 
-  req.io.emit("message finished");
-
   // Save chat history to Firestore
-  await chatRef.update({ messages });
+  await chatRef.set({ messages });
 
-  // Calculate tokens used
   const usageInfo = new GPTTokens({
     model: "gpt-3.5-turbo-0613",
     messages: messages,
@@ -100,7 +88,10 @@ router.post("/sendMessage/:chatId", checkAuth, async (req, res) => {
     "Tokens total": usageInfo.usedTokens,
   });
 
-  res.status(200).send();
+  // Return the HTML for the new system message
+  res.send(
+    `<div class="system"><strong>SYSTEM:</strong> ${responseContent}</div>`
+  );
 });
 
 router.post("/register", async (req, res) => {
@@ -132,10 +123,9 @@ router.post("/login", async (req, res) => {
     res.status(500).send("Error logging out");
   }
 });
-
 router.post("/logout", checkAuth, async (req, res) => {
   try {
-    await firebase.auth().signOut();
+    await auth.signOut();
     req.session.destroy(); // Clear session
     res.redirect("/login");
   } catch (error) {
@@ -199,8 +189,12 @@ router.get("/getChats", checkAuth, async (req, res) => {
 router.post("/clearChat/:chatId", checkAuth, async (req, res) => {
   const chatRef = firestore.doc(`chats/${req.params.chatId}`);
   const chatDoc = await chatRef.get();
-  const chatName = chatDoc.exists ? chatDoc.data().name : "";
-  // Set the messages of the chat to an empty array and preserve the name
+  if (!chatDoc.exists || !chatDoc.data().name) {
+    console.error("Chat document does not exist or chatName is undefined");
+    res.status(500).send("Error clearing chat");
+    return;
+  }
+  const chatName = chatDoc.data().name;
   await chatRef.set({ messages: [], name: chatName });
   res.status(200).send();
 });
