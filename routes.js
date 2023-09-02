@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { Configuration, OpenAIApi } = require("openai");
+const OpenAI = require("openai");
 const { GPTTokens } = require("gpt-tokens");
 
 const { firestore, firebase } = require("./firebaseConfig");
@@ -8,10 +8,9 @@ const { FieldValue } = require("@google-cloud/firestore");
 
 const systemPrompt = "You are a helpful assistant.";
 
-const configuration = new Configuration({
+const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
-const openai = new OpenAIApi(configuration);
 
 const checkAuth = (req, res, next) => {
   if (req.session.userId) {
@@ -70,16 +69,25 @@ router.post("/sendMessage/:chatId", checkAuth, async (req, res) => {
     { role: "user", content: userMessage }
   );
 
-  const chatCompletion = await openai.createChatCompletion({
-    model: "gpt-3.5-turbo-0613",
-    messages: messages,
+  const stream = await openai.chat.completions.create({
+    model: "gpt-3.5-turbo",
+    messages: [{ role: "user", content: userMessage }],
+    stream: true,
   });
 
-  const responseContent = chatCompletion.data.choices[0].message.content;
+  let responseContent = "";
+  for await (const part of stream) {
+    const newPart = part.choices[0]?.delta?.content || "";
+    responseContent += newPart;
+    req.io.emit("new message", newPart);
+  }
+
   messages.push({ role: "system", content: responseContent });
 
+  req.io.emit("message finished");
+
   // Save chat history to Firestore
-  await chatRef.set({ messages });
+  await chatRef.update({ messages });
 
   // Calculate tokens used
   const usageInfo = new GPTTokens({
@@ -92,10 +100,7 @@ router.post("/sendMessage/:chatId", checkAuth, async (req, res) => {
     "Tokens total": usageInfo.usedTokens,
   });
 
-  // Return the HTML for the new system message
-  res.send(
-    `<div class="system"><strong>SYSTEM:</strong> ${responseContent}</div>`
-  );
+  res.status(200).send();
 });
 
 router.post("/register", async (req, res) => {

@@ -11,6 +11,8 @@ const routes = require("./routes");
 const pino = require("pino");
 const logger = require("pino-http");
 const { firestore } = require("./firebaseConfig"); // Import firestore from firebaseConfig.js
+const http = require("http");
+const { Server } = require("socket.io");
 
 dotenv.config();
 
@@ -18,6 +20,8 @@ const standaloneLogger = pino({ level: "warn" });
 const httpLogger = logger({ autoLogging: false });
 
 const app = express();
+const server = http.createServer(app);
+const io = new Server(server);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
@@ -34,13 +38,18 @@ app.use(
     cookie: { secure: false }, // set to true if your using https
   })
 );
+app.use((req, res, next) => {
+  req.io = io;
+  next();
+});
+
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "public"));
 
 app.use(express.static(path.join(__dirname, "public")));
 app.use("/chats", express.static(path.join(__dirname, "public/chats")));
 
-app.use("/", routes); // Use the routes
+app.use("/", routes); 
 
 // Error handling middleware
 app.use((err, req, res, next) => {
@@ -48,6 +57,6 @@ app.use((err, req, res, next) => {
   res.status(500).send("Something broke!");
 });
 
-app.listen(3000, () => {
+server.listen(3000, () => {
   console.log("Server is now running at port 3000!");
 });
