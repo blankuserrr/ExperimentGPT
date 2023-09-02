@@ -1,7 +1,7 @@
 document.body.addEventListener("htmx:beforeRequest", function (evt) {
   if (evt.detail.elt.id === "chatForm") {
-    var userMessage = document.getElementById("userMessage");
-    var conversation = document.getElementById("conversation");
+    let userMessage = document.getElementById("userMessage") as HTMLInputElement;
+    let conversation = document.getElementById("conversation") as HTMLDivElement;
     conversation.innerHTML += `<div class="user"><strong>USER:</strong> ${userMessage.value}</div>`;
     userMessage.value = ""; // Clear the input field
   }
@@ -14,7 +14,7 @@ document.body.addEventListener("htmx:beforeRequest", function (evt) {
 });
 
 window.addEventListener("load", function () {
-  var link = document.querySelector('link[rel="preload"]');
+  let link = document.querySelector('link[rel="preload"]') as HTMLLinkElement;
   if (link) {
     link.onload = null;
     link.rel = "stylesheet";
@@ -27,9 +27,9 @@ document.getElementById("toChats").addEventListener("click", function () {
 
 const socket = io();
 
-socket.on("new message", (newPart) => {
-  const conversation = document.getElementById("conversation");
-  let lastMessage = conversation.lastChild;
+socket.on("new message", (newPart: string) => {
+  const conversation = document.getElementById("conversation") as HTMLDivElement;
+  let lastMessage = conversation.lastChild as HTMLDivElement;
 
   if (lastMessage && lastMessage.className === "system") {
     // Append the new part of the response to the last system message

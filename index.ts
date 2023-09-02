@@ -1,18 +1,18 @@
-const express = require("express");
-const bodyParser = require("body-parser");
-const dotenv = require("dotenv");
-const cors = require("cors");
-const path = require("path");
-const helmet = require("helmet");
-const session = require("express-session");
-const { Firestore } = require("@google-cloud/firestore");
-const { FirestoreStore } = require("@google-cloud/connect-firestore");
-const routes = require("./routes");
-const pino = require("pino");
-const logger = require("pino-http");
-const { firestore } = require("./firebaseConfig"); // Import firestore from firebaseConfig.js
-const http = require("http");
-const { Server } = require("socket.io");
+import express, { Request, Response, NextFunction } from "express";
+import bodyParser from "body-parser";
+import dotenv from "dotenv";
+import cors from "cors";
+import path from "path";
+import helmet from "helmet";
+import session from "express-session";
+import { Firestore } from "@google-cloud/firestore";
+import { FirestoreStore } from "@google-cloud/connect-firestore";
+import routes from "./routes";
+import pino from "pino";
+import logger from "pino-http";
+import { firestore } from "./firebaseConfig"; // Import firestore from firebaseConfig.js
+import http from "http";
+import { Server } from "socket.io";
 
 dotenv.config();
 
@@ -38,7 +38,7 @@ app.use(
     cookie: { secure: false }, // set to true if your using https
   })
 );
-app.use((req, res, next) => {
+app.use((req: Request, res: Response, next: NextFunction) => {
   req.io = io;
   next();
 });
@@ -52,7 +52,7 @@ app.use("/chats", express.static(path.join(__dirname, "public/chats")));
 app.use("/", routes);
 
 // Error handling middleware
-app.use((err, req, res, next) => {
+app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   req.log.error(err.stack);
   res.status(500).send("Something broke!");
 });

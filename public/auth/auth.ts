@@ -1,6 +1,6 @@
 function loadJQ() {
   $(document).ready(function () {
-    var isLogin = true;
+    let isLogin: boolean = true;
     $("#toggleButton").click(function () {
       isLogin = !isLogin;
       if (isLogin) {
@@ -14,9 +14,9 @@ function loadJQ() {
 
     $("#authForm").on("submit", function (event) {
       event.preventDefault();
-      var username = $("#username").val();
-      var password = $("#password").val();
-      var url = isLogin ? "/login" : "/register";
+      const username: string = $("#username").val();
+      const password: string = $("#password").val();
+      const url: string = isLogin ? "/login" : "/register";
       $.post(url, { email: username, password: password })
         .done(function () {
           window.location.href = "/"; // Redirect to the homepage on success

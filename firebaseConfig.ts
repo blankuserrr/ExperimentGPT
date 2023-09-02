@@ -1,7 +1,7 @@
-const firebase = require("firebase/app");
-require("firebase/auth");
-const { Firestore } = require("@google-cloud/firestore");
-const dotenv = require("dotenv");
+import firebase from "firebase/app";
+import "firebase/auth";
+import { Firestore } from "@google-cloud/firestore";
+import dotenv from "dotenv";
 
 dotenv.config();
 
@@ -23,4 +23,4 @@ const firestore = new Firestore({
     "secrets/experimentgpt-b7411-firebase-adminsdk-k8f78-d5b8e11e63.json",
 });
 
-module.exports = { firestore, firebase };
+export { firestore, firebase };

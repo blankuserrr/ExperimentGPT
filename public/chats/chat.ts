@@ -1,12 +1,12 @@
 window.onload = function () {
-  var button = document.getElementById("chatSelect");
+  const button = document.getElementById("chatSelect");
   button.style.borderBottomLeftRadius = "10px";
   button.style.borderBottomRightRadius = "10px";
 };
 
 document.getElementById("chatSelect").addEventListener("click", function () {
-  var dropdown = document.getElementById("chatDropdown");
-  var button = document.getElementById("chatSelect");
+  const dropdown = document.getElementById("chatDropdown");
+  const button = document.getElementById("chatSelect");
 
   if (dropdown.style.display === "block") {
     dropdown.style.display = "none";
@@ -21,15 +21,16 @@ document.getElementById("chatSelect").addEventListener("click", function () {
 
 window.addEventListener("click", function (event) {
   if (!event.target.matches("#chatSelect")) {
-    var dropdown = document.getElementById("chatDropdown");
-    var button = document.getElementById("chatSelect");
+    const dropdown = document.getElementById("chatDropdown");
+    const button = document.getElementById("chatSelect");
 
     dropdown.style.display = "none";
     button.style.borderBottomLeftRadius = "10px";
     button.style.borderBottomRightRadius = "10px";
   }
 });
-var chatLinks = document.querySelectorAll("#chatDropdown a");
+
+const chatLinks = document.querySelectorAll("#chatDropdown a");
 chatLinks.forEach(function (link) {
   // Add event listener to each link
   link.addEventListener("click", function (event) {
@@ -40,8 +41,9 @@ chatLinks.forEach(function (link) {
     }
   });
 });
+
 // Get all chat links
-var chatLinks = document.querySelectorAll("#chatDropdown a");
+const chatLinks = document.querySelectorAll("#chatDropdown a");
 chatLinks.forEach(function (link) {
   // Add event listener to each link
   link.addEventListener("click", function (event) {
