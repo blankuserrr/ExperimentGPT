@@ -38,6 +38,13 @@ app.use(
     cookie: { secure: false }, // set to true if your using https
   })
 );
+
+declare module 'express-serve-static-core' {
+  interface Request {
+    io: typeof io;
+  }
+}
+
 app.use((req: Request, res: Response, next: NextFunction) => {
   req.io = io;
   next();

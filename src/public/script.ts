@@ -1,28 +1,32 @@
-document.body.addEventListener("htmx:beforeRequest", function (evt) {
-  if (evt.detail.elt.id === "chatForm") {
+declare var io: any;
+
+interface HTMXEvent extends Event {
+  detail: {
+    elt: {
+      id: string;
+    };
+  };
+}
+
+document.body.addEventListener("htmx:beforeRequest", function (this: HTMLElement, evt) {
+  const htmxEvt = evt as HTMXEvent;
+  if (htmxEvt.detail.elt.id === "chatForm") {
     let userMessage = document.getElementById("userMessage") as HTMLInputElement;
     let conversation = document.getElementById("conversation") as HTMLDivElement;
     conversation.innerHTML += `<div class="user"><strong>USER:</strong> ${userMessage.value}</div>`;
     userMessage.value = ""; // Clear the input field
   }
-  if (evt.detail.elt.id === "createChatButton") {
+  if (htmxEvt.detail.elt.id === "createChatButton") {
     location.reload();
   }
-  if (evt.detail.elt.id === "deleteChatButton") {
+  if (htmxEvt.detail.elt.id === "deleteChatButton") {
     window.location.href = "/";
   }
 });
 
-window.addEventListener("load", function () {
-  let link = document.querySelector('link[rel="preload"]') as HTMLLinkElement;
-  if (link) {
-    link.onload = null;
-    link.rel = "stylesheet";
-  }
-});
 
-document.getElementById("toChats").addEventListener("click", function () {
-  window.location = "/";
+document.getElementById("toChats")?.addEventListener("click", function () {
+  window.location.href = "/";
 });
 
 const socket = io();

@@ -1,3 +1,4 @@
+
 function loadJQ() {
   $(document).ready(function () {
     let isLogin: boolean = true;
@@ -14,8 +15,8 @@ function loadJQ() {
 
     $("#authForm").on("submit", function (event) {
       event.preventDefault();
-      const username: string = $("#username").val();
-      const password: string = $("#password").val();
+      const username: string = ($("#username").val() as string);
+      const password: string = ($("#password").val() as string);
       const url: string = isLogin ? "/login" : "/register";
       $.post(url, { email: username, password: password })
         .done(function () {
