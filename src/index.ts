@@ -32,7 +32,7 @@ app.use(
       dataset: firestore, // Use the firestore instance from firebaseConfig.js
       kind: "express-sessions",
     }),
-    secret: "test123",
+    secret: process.env.SESSION_SECRET || 'default_secret',
     resave: false,
     saveUninitialized: true,
     cookie: { secure: false }, // set to true if your using https

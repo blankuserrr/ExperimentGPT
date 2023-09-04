@@ -31,7 +31,7 @@ app.use((0, express_session_1.default)({
         dataset: firebaseConfig_1.firestore,
         kind: "express-sessions",
     }),
-    secret: "test123",
+    secret: process.env.SESSION_SECRET || 'default_secret',
     resave: false,
     saveUninitialized: true,
     cookie: { secure: false }, // set to true if your using https

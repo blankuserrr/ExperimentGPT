@@ -31,7 +31,6 @@
   "dependencies": {
     "@google-cloud/connect-firestore": "^2.0.2",
     "@google-cloud/firestore": "^6.7.0",
-    "@types/socket.io-client": "^3.0.0",
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
@@ -48,8 +47,7 @@
     "pino-http": "^8.4.0",
     "pino-pretty": "^10.2.0",
     "protobufjs": "^7.2.5",
-    "socket.io": "^4.7.2",
-    "socket.io-client": "^4.7.2"
+    "socket.io": "^4.7.2"
   },
   "devDependencies": {
     "@types/express": "^4.17.17",

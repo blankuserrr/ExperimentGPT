@@ -8,12 +8,19 @@ interface HTMXEvent extends Event {
   };
 }
 
+function escapeHTML(unsafeText: string): string {
+  let div = document.createElement('div');
+  div.textContent = unsafeText;
+  return div.innerHTML;
+}
+
 document.body.addEventListener("htmx:beforeRequest", function (this: HTMLElement, evt) {
   const htmxEvt = evt as HTMXEvent;
   if (htmxEvt.detail.elt.id === "chatForm") {
     let userMessage = document.getElementById("userMessage") as HTMLInputElement;
     let conversation = document.getElementById("conversation") as HTMLDivElement;
-    conversation.innerHTML += `<div class="user"><strong>USER:</strong> ${userMessage.value}</div>`;
+    let escapedMessage = escapeHTML(userMessage.value);
+    conversation.innerHTML += `<div class="user"><strong>USER:</strong> ${escapedMessage}</div>`;
     userMessage.value = ""; // Clear the input field
   }
   if (htmxEvt.detail.elt.id === "createChatButton") {

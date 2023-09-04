@@ -109,12 +109,19 @@ router.post("/login", async (req, res) => {
         const userCredential = await firebaseConfig_1.firebase
             .auth()
             .signInWithEmailAndPassword(email, password);
-        req.session.userId = userCredential.user?.uid; // Save user ID in session
-        res.status(200).send();
+        req.session.regenerate((err) => {
+            if (err) {
+                req.log.error(err);
+                return res.status(500).send("Error regenerating session");
+            }
+            // Save user ID in new session
+            req.session.userId = userCredential.user?.uid;
+            res.status(200).send();
+        });
     }
     catch (error) {
         req.log.error(error);
-        res.status(500).send("Error logging out");
+        res.status(500).send("Error logging in");
     }
 });
 router.post("/logout", checkAuth, async (req, res) => {
@@ -175,13 +182,17 @@ router.post("/clearChat/:chatId", checkAuth, async (req, res) => {
 });
 router.post("/deleteChat", checkAuth, async (req, res) => {
     const chatId = req.body.chatId;
+    if (!chatId) {
+        res.status(400).send("Chat ID is required");
+        return;
+    }
     try {
         await firebaseConfig_1.firestore.collection("chats").doc(chatId).delete();
         const userRef = firebaseConfig_1.firestore.doc(`users/${req.uid}`);
         await userRef.update({
             chats: firestore_1.FieldValue.arrayRemove(chatId), // Use FieldValue
         });
-        res.status(200).send();
+        res.status(200).send(''); // Send an empty response
     }
     catch (error) {
         console.error(error);

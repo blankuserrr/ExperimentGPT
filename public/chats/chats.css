@@ -116,3 +116,28 @@ button:hover {
     background-color: #a92d4c;
     border-radius: 10px;
 }
+.chat-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.delete-chat {
+    background-color: transparent;
+    /* Make background transparent */
+    color: #FAEAEC;
+    border: none;
+    cursor: pointer;
+    padding: 5px 10px;
+    margin-left: -10px;
+    font-weight: bold;
+    width: 20px;
+    text-align: center;
+    font-size: 19px;
+}
+
+.delete-chat:hover {
+    background-color: transparent;
+    color: #FAEAEC;
+    font-weight: 900;
+}
