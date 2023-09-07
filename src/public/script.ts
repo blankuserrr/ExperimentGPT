@@ -52,4 +52,22 @@ socket.on("new message", (newPart: string) => {
     newMessage.innerHTML = `<strong>SYSTEM:</strong> ${newPart}`;
     conversation.appendChild(newMessage);
   }
+
+  // Apply Prism.js highlighting to new code blocks
+  var text = conversation.innerHTML;
+  var regex = /```(\w+)\s([\s\S]*?)```/g;
+  var match;
+  while ((match = regex.exec(text)) !== null) {
+    var language = match[1];
+    var code = match[2];
+    var codeElement = document.createElement('code');
+    codeElement.className = 'language-' + language;
+    codeElement.textContent = code;
+    var preElement = document.createElement('pre');
+    preElement.appendChild(codeElement);
+    var highlightedCode = preElement.outerHTML;
+    text = text.replace(match[0], highlightedCode);
+  }
+  conversation.innerHTML = text;
+  Prism.highlightAllUnder(conversation);
 });

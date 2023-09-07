@@ -23,13 +23,13 @@ document.getElementById("chatSelect")?.addEventListener("click", function () {
 });
 
 window.addEventListener("click", function (event) {
-  if (!(event.target as Element).matches("#chatSelect")) {
-    const dropdown = document.getElementById("chatDropdown");
-    const button = document.getElementById("chatSelect");
-    if (dropdown && button) {
+  const dropdown = document.getElementById("chatDropdown");
+  const button = document.getElementById("chatSelect");
+  if (dropdown && button) {
+    if (!(event.target as Element).matches("#chatSelect") && !(dropdown.contains(event.target as Node))) {
       dropdown.style.display = "none";
       button.style.borderBottomLeftRadius = "10px";
       button.style.borderBottomRightRadius = "10px";
     }
   }
-});
+});  

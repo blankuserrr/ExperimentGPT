@@ -7,6 +7,7 @@ import { firestore, firebase } from "./firebaseConfig";
 import { FieldValue } from "@google-cloud/firestore";
 import session from 'express-session';
 import { Server as SocketIoServer } from "socket.io";
+import { BadRequestError } from './index';
 
 interface CustomSession extends session.Session {
   userId?: string; // Add your custom property here
@@ -223,8 +224,7 @@ router.post("/clearChat/:chatId", checkAuth, async (req: Request, res: Response)
 router.post("/deleteChat", checkAuth, async (req: RequestWithCustomSession, res: Response) => {
   const chatId = req.body.chatId;
   if (!chatId) {
-    res.status(400).send("Chat ID is required");
-    return;
+    throw new BadRequestError('Chat ID is required');
   }
   try {
     await firestore.collection("chats").doc(chatId).delete();
@@ -235,7 +235,7 @@ router.post("/deleteChat", checkAuth, async (req: RequestWithCustomSession, res:
     res.status(200).send(''); // Send an empty response
   } catch (error) {
     console.error(error);
-    res.status(500).send("Error deleting chat");
+    throw new Error('Error deleting chat');
   }
 });
 

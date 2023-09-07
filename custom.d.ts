@@ -6,6 +6,3 @@ declare global {
   }
 }
 
-declare global {
-  const htmx: any;
-}

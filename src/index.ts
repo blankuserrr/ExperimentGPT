@@ -10,34 +10,60 @@ import { FirestoreStore } from "@google-cloud/connect-firestore";
 import routes from "./routes";
 import pino from "pino";
 import logger from "pino-http";
-import { firestore } from "./firebaseConfig"; // Import firestore from firebaseConfig.js
+import { firestore } from "./firebaseConfig"; 
 import http from "http";
 import { Server } from "socket.io";
+import compression from "compression";
 
 dotenv.config();
 
-const standaloneLogger = pino({ level: "warn" });
 const httpLogger = logger({ autoLogging: false });
 
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
+
+// Custom error classes
+export class BadRequestError extends Error {
+  constructor(message = 'Bad Request') {
+    super(message);
+    this.name = 'BadRequestError';
+  }
+}
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 app.use(httpLogger);
+app.use(compression());
 app.use(
   session({
     store: new FirestoreStore({
-      dataset: firestore, // Use the firestore instance from firebaseConfig.js
+      dataset: firestore, 
       kind: "express-sessions",
     }),
     secret: process.env.SESSION_SECRET || 'default_secret',
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: false }, // set to true if your using https
+    cookie: { secure: false },
   })
 );
+app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+  req.log.error(err.stack);
+  switch (err.name) {
+    case 'BadRequestError':
+      res.status(400).send(err.message);
+      break;
+    case 'UnauthorizedError':
+      res.status(401).send(err.message);
+      break;
+    case 'NotFoundError':
+      res.status(404).send(err.message);
+      break;
+    default:
+      res.status(500).send('Something broke!');
+  }
+});
 
 declare module 'express-serve-static-core' {
   interface Request {
@@ -63,6 +89,7 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   req.log.error(err.stack);
   res.status(500).send("Something broke!");
 });
+
 
 server.listen(3000, () => {
   console.log("Server is now running at port 3000!");

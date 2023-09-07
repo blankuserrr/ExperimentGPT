@@ -1,44 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta
-  name="description" content="A smart, complex, and easy to use AI Chatbot. Made in collaboration with OpenAI.">
-        <title>ExperimentGPT</title>
-        <link rel="icon" type="image/x-icon" href="/assets/favicon/favicon.webp">
-        <link rel="stylesheet" href="/styles.css" async>
-        <link rel="preload" href="https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap" as="style">
-        <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap"></noscript> <!-- Fallback for no JavaScript -->
-        <script src="/socket.io/socket.io.js"></script>
-    </head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A smart, complex, and easy to use AI Chatbot. Made in collaboration with OpenAI.">
+  <title>ExperimentGPT</title>
+  <link rel="icon" type="image/x-icon" href="/assets/favicon/favicon.webp">
+  <link rel="stylesheet" href="/styles.css" async>
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap" as="style">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap"></noscript>
+  <link rel="stylesheet" href="/prism/prism.css">
+  <script src="/socket.io/socket.io.js"></script>
+</head>
 <body>
-  <button id="toChats">Chats</button>
-  <form id="logoutForm" action="/logout" method="post">
-    <button type="submit">Logout</button>
-  </form>
-  <button id="clearButton" hx-post="/clearChat/<%= chatId %>" hx-trigger="click" hx-target="#conversation" hx-swap="innerHTML">Clear Conversation</button>
-  <div id="chatContainer">
-    <div id="conversation">
-      <% messages.forEach((message) => { %>
-  <% if (message.content !== systemPrompt) { %>
-    <div class="<%= message.role %>">
-      <strong><%= message.role.toUpperCase() %>:</strong> <%= message.content %>
+  <header>
+    <button id="toChats">Chats</button>
+    <form id="logoutForm" action="/logout" method="post">
+      <button type="submit">Logout</button>
+    </form>
+  </header>
+  <main>
+    <button id="clearButton" hx-post="/clearChat/<%= chatId %>" hx-trigger="click" hx-target="#conversation" hx-swap="innerHTML">Clear Conversation</button>
+    <div id="chatContainer">
+      <div id="conversation">
+        <% messages.forEach((message) => { %>
+          <% if (message.content !== systemPrompt) { %>
+            <div class="<%= message.role %>">
+              <strong><%= message.role.toUpperCase() %>:</strong> <%= message.content %>
+            </div>
+          <% } %>
+        <% }); %>
+      </div>
     </div>
-  <% } %>
-<% }); %>
-    </div>
-  </div>
-  <form id="chatForm" hx-post="/sendMessage/<%= chatId %>" hx-vars='userMessage:document.getElementById("userMessage").value' hx-trigger="submit" hx-target="#conversation" hx-swap="beforeend">
-    <input type="text" name="userMessage" aria-label="Message Input Box" id="userMessage" required>
-    <div id="sendButtonContainer">
-      <button type="submit">
-        <img src="/assets/send.svg" alt="Send">
-      </button>
-    </div>
-  </form>
+    <form id="chatForm" hx-post="/sendMessage/<%= chatId %>" hx-vars='userMessage:document.getElementById("userMessage").value' hx-trigger="submit" hx-target="#conversation" hx-swap="beforeend">
+      <input type="text" name="userMessage" aria-label="Message Input Box" id="userMessage" required>
+      <div id="sendButtonContainer">
+        <button type="submit">
+          <img src="/assets/send.svg" alt="Send">
+        </button>
+      </div>
+    </form>
+  </main>
   <script src="https://unpkg.com/htmx.org@1.9.5"></script>
+  <script src="/prism/prism.js"></script>
   <script src="/script.js"></script>
+   <script>
+    window.onload = function() {
+  var conversation = document.getElementById('conversation');
+  var text = conversation.innerHTML;
+  var regex = /```(\w+)\s([\s\S]*?)```/g;
+  var match;
+  while ((match = regex.exec(text)) !== null) {
+    var language = match[1];
+    var code = match[2];
+    var codeElement = document.createElement('code');
+    codeElement.className = 'language-' + language;
+    codeElement.textContent = code;
+    var preElement = document.createElement('pre');
+    preElement.appendChild(codeElement);
+    var highlightedCode = preElement.outerHTML;
+    text = text.replace(match[0], highlightedCode);
+  }
+  conversation.innerHTML = text;
+  Prism.highlightAllUnder(conversation);
+};
+  </script>
 </body>
 </html>

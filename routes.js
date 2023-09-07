@@ -8,6 +8,7 @@ const openai_1 = __importDefault(require("openai"));
 const gpt_tokens_1 = require("gpt-tokens");
 const firebaseConfig_1 = require("./firebaseConfig");
 const firestore_1 = require("@google-cloud/firestore");
+const index_1 = require("./index");
 const systemPrompt = "You are a helpful assistant.";
 const router = (0, express_1.Router)();
 const openai = new openai_1.default({
@@ -183,8 +184,7 @@ router.post("/clearChat/:chatId", checkAuth, async (req, res) => {
 router.post("/deleteChat", checkAuth, async (req, res) => {
     const chatId = req.body.chatId;
     if (!chatId) {
-        res.status(400).send("Chat ID is required");
-        return;
+        throw new index_1.BadRequestError('Chat ID is required');
     }
     try {
         await firebaseConfig_1.firestore.collection("chats").doc(chatId).delete();
@@ -196,7 +196,7 @@ router.post("/deleteChat", checkAuth, async (req, res) => {
     }
     catch (error) {
         console.error(error);
-        res.status(500).send("Error deleting chat");
+        throw new Error('Error deleting chat');
     }
 });
 exports.default = router;

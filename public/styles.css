@@ -1,25 +1,25 @@
 body {
+    margin: 0;
+    padding: 0;
     background-color: #171717;
     color: #FAEAEC;
     font-family: 'Noto Sans', sans-serif;
-    margin: 0;
-    padding: 0;
 }
 
 #chatContainer {
-    background-color: #3c101b;
-    border-radius: 20px;
+    position: relative;
     max-width: 80%;
     height: 60%;
     margin: 5% auto;
-    overflow: auto;
     padding: 20px;
-    position: relative;
+    overflow: auto;
+    background-color: #3c101b;
+    border-radius: 20px;
 }
 
 #conversation div {
-    margin-bottom: 0;
     padding: 10px;
+    margin-bottom: 0;
 }
 
 #conversation div:first-child {
@@ -34,8 +34,8 @@ body {
 
 .user,
 .system {
-    background-color: #91273E;
     color: #FAEAEC;
+    background-color: #91273E;
 }
 
 .user:hover {
@@ -51,25 +51,25 @@ body {
 }
 
 #chatForm {
-    background-color: #a92d4c;
-    border-radius: 20px;
+    position: fixed;
     bottom: 10px;
     left: 50%;
-    padding: 10px;
-    position: fixed;
-    transform: translateX(-50%);
     width: 80%;
+    padding: 10px;
+    transform: translateX(-50%);
     display: flex;
     justify-content: space-between;
+    background-color: #a92d4c;
+    border-radius: 20px;
 }
 
 #userMessage {
+    width: 70%;
+    padding: 10px;
+    color: #FAEAEC;
     background-color: #91273E;
     border: none;
     border-radius: 10px;
-    color: #FAEAEC;
-    padding: 10px;
-    width: 70%;
 }
 
 #sendButtonContainer {
@@ -79,15 +79,15 @@ body {
 }
 
 button {
+    padding: 10px 20px;
+    color: #FAEAEC;
     background-color: #91273E;
     border: none;
     border-radius: 10px;
-    color: #FAEAEC;
-    cursor: pointer;
-    padding: 10px 20px;
     display: flex;
     justify-content: center;
     align-items: center;
+    cursor: pointer;
 }
 
 button img {
@@ -101,23 +101,24 @@ button:hover {
 
 #clearButton,
 #logoutForm {
+    position: absolute;
+    padding: 10px 20px;
+    color: #FAEAEC;
+    background-color: #91273E;
     border: none;
     border-radius: 10px;
-    color: #FAEAEC;
     cursor: pointer;
-    padding: 10px 20px;
-    position: absolute;
     z-index: 1;
 }
 
 #clearButton {
-    right: 20px;
     top: 20px;
+    right: 20px;
 }
 
 #logoutForm {
-    left: 20px;
     top: 20px;
+    left: 20px;
     padding: 0;
 }
 
@@ -127,6 +128,9 @@ button:hover {
 
 #toChats {
     position: absolute;
-    left: 0;
     bottom: 10px;
+    left: 20px;
+}
+[class^="language-"] {
+    border: none !important;
 }
