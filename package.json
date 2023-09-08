@@ -46,9 +46,6 @@
     "helmet": "^7.0.0",
     "openai": "^4.4.0",
     "path": "^0.12.7",
-    "pino": "^8.15.0",
-    "pino-http": "^8.4.0",
-    "pino-pretty": "^10.2.0",
     "protobufjs": "^7.2.5",
     "socket.io": "^4.7.2"
   },

@@ -8,7 +8,7 @@ const openai_1 = __importDefault(require("openai"));
 const gpt_tokens_1 = require("gpt-tokens");
 const firebaseConfig_1 = require("./firebaseConfig");
 const firestore_1 = require("@google-cloud/firestore");
-const index_1 = require("./index");
+const error_1 = require("./error");
 const systemPrompt = "You are a helpful assistant.";
 const router = (0, express_1.Router)();
 const openai = new openai_1.default({
@@ -61,6 +61,9 @@ router.post("/sendMessage/:chatId", checkAuth, async (req, res) => {
     const chatRef = firebaseConfig_1.firestore.collection("chats").doc(req.params.chatId);
     const chatDoc = await chatRef.get();
     let messages = chatDoc.exists ? chatDoc.data()?.messages : [];
+    if (!chatDoc.exists) {
+        throw new error_1.BadRequestError('Chat does not exist');
+    }
     messages.push({ role: "system", content: systemPrompt }, { role: "user", content: userMessage });
     const stream = await openai.chat.completions.create({
         model: "gpt-3.5-turbo",
@@ -100,8 +103,7 @@ router.post("/register", async (req, res) => {
         res.status(200).send();
     }
     catch (error) {
-        req.log.error(error);
-        res.status(500).send("Error registering user");
+        throw new error_1.InternalServerError('Error registering user');
     }
 });
 router.post("/login", async (req, res) => {
@@ -112,8 +114,7 @@ router.post("/login", async (req, res) => {
             .signInWithEmailAndPassword(email, password);
         req.session.regenerate((err) => {
             if (err) {
-                req.log.error(err);
-                return res.status(500).send("Error regenerating session");
+                throw new error_1.InternalServerError('Error regenerating session');
             }
             // Save user ID in new session
             req.session.userId = userCredential.user?.uid;
@@ -121,8 +122,7 @@ router.post("/login", async (req, res) => {
         });
     }
     catch (error) {
-        req.log.error(error);
-        res.status(500).send("Error logging in");
+        throw new error_1.UnauthorizedError('Error logging in');
     }
 });
 router.post("/logout", checkAuth, async (req, res) => {
@@ -151,6 +151,9 @@ router.post("/createChat", checkAuth, async (req, res) => {
         const chatRef = firebaseConfig_1.firestore.doc(`chats/${chatId}`);
         await chatRef.set({ messages: [], name: chatName });
         const userRef = firebaseConfig_1.firestore.doc(`users/${req.uid}`);
+        if (!userRef) {
+            throw new error_1.BadRequestError('User does not exist');
+        }
         await userRef.update({
             chats: firestore_1.FieldValue.arrayUnion(chatRef.id),
         });
@@ -158,7 +161,7 @@ router.post("/createChat", checkAuth, async (req, res) => {
     }
     catch (error) {
         console.error(error);
-        res.status(500).send("Error creating chat");
+        throw new error_1.InternalServerError('Error creating chat');
     }
 });
 router.get("/getChats", checkAuth, async (req, res) => {
@@ -177,6 +180,9 @@ router.post("/clearChat/:chatId", checkAuth, async (req, res) => {
     const chatRef = firebaseConfig_1.firestore.doc(`chats/${req.params.chatId}`);
     const chatDoc = await chatRef.get();
     const chatName = chatDoc.exists ? chatDoc.data()?.name : "";
+    if (!chatDoc.exists) {
+        throw new error_1.BadRequestError('Chat does not exist');
+    }
     // Set the messages of the chat to an empty array and preserve the name
     await chatRef.set({ messages: [], name: chatName });
     res.status(200).send();
@@ -184,19 +190,22 @@ router.post("/clearChat/:chatId", checkAuth, async (req, res) => {
 router.post("/deleteChat", checkAuth, async (req, res) => {
     const chatId = req.body.chatId;
     if (!chatId) {
-        throw new index_1.BadRequestError('Chat ID is required');
+        throw new error_1.BadRequestError('Chat ID is required');
     }
     try {
         await firebaseConfig_1.firestore.collection("chats").doc(chatId).delete();
         const userRef = firebaseConfig_1.firestore.doc(`users/${req.uid}`);
+        if (!userRef) {
+            throw new error_1.BadRequestError('User does not exist');
+        }
         await userRef.update({
-            chats: firestore_1.FieldValue.arrayRemove(chatId), // Use FieldValue
+            chats: firestore_1.FieldValue.arrayRemove(chatId),
         });
-        res.status(200).send(''); // Send an empty response
+        res.status(200).send('');
     }
     catch (error) {
         console.error(error);
-        throw new Error('Error deleting chat');
+        throw new error_1.InternalServerError('Error deleting chat');
     }
 });
 exports.default = router;

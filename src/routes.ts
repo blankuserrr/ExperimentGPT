@@ -7,7 +7,7 @@ import { firestore, firebase } from "./firebaseConfig";
 import { FieldValue } from "@google-cloud/firestore";
 import session from 'express-session';
 import { Server as SocketIoServer } from "socket.io";
-import { BadRequestError } from './index';
+import { BadRequestError, UnauthorizedError, InternalServerError } from './error';
 
 interface CustomSession extends session.Session {
   userId?: string; // Add your custom property here
@@ -83,6 +83,10 @@ router.post("/sendMessage/:chatId", checkAuth, async (req: Request, res: Respons
   const chatDoc = await chatRef.get();
   let messages = chatDoc.exists ? chatDoc.data()?.messages : [];
 
+  if (!chatDoc.exists) {
+    throw new BadRequestError('Chat does not exist');
+  }
+
   messages.push(
     { role: "system", content: systemPrompt },
     { role: "user", content: userMessage }
@@ -133,8 +137,7 @@ router.post("/register", async (req: Request, res: Response) => {
     await userRef.set({ chats: [] });
     res.status(200).send();
   } catch (error) {
-    req.log.error(error);
-    res.status(500).send("Error registering user");
+    throw new InternalServerError('Error registering user');
   }
 });
 
@@ -147,18 +150,17 @@ router.post("/login", async (req: Request, res: Response) => {
     
     req.session.regenerate((err) => {
       if (err) {
-        req.log.error(err);
-        return res.status(500).send("Error regenerating session");
+        throw new InternalServerError('Error regenerating session');
       }
       // Save user ID in new session
       (req.session as CustomSession).userId = userCredential.user?.uid;
       res.status(200).send();
     });
   } catch (error) {
-    req.log.error(error);
-    res.status(500).send("Error logging in");
+    throw new UnauthorizedError('Error logging in');
   }
 });
+
 
 router.post("/logout", checkAuth, async (req: Request, res: Response) => {
   try {
@@ -190,13 +192,16 @@ router.post("/createChat", checkAuth, async (req: RequestWithCustomSession, res:
     const chatRef = firestore.doc(`chats/${chatId}`);
     await chatRef.set({ messages: [], name: chatName });
     const userRef = firestore.doc(`users/${req.uid}`);
+    if (!userRef) {
+      throw new BadRequestError('User does not exist');
+    }
     await userRef.update({
       chats: FieldValue.arrayUnion(chatRef.id), 
     });
     res.redirect(`/chat/${chatRef.id}`);
   } catch (error) {
     console.error(error);
-    res.status(500).send("Error creating chat");
+    throw new InternalServerError('Error creating chat');
   }
 });
 
@@ -216,10 +221,14 @@ router.post("/clearChat/:chatId", checkAuth, async (req: Request, res: Response)
   const chatRef = firestore.doc(`chats/${req.params.chatId}`);
   const chatDoc = await chatRef.get();
   const chatName = chatDoc.exists ? chatDoc.data()?.name : "";
+  if (!chatDoc.exists) {
+    throw new BadRequestError('Chat does not exist');
+  }
   // Set the messages of the chat to an empty array and preserve the name
   await chatRef.set({ messages: [], name: chatName });
   res.status(200).send();
 });
+
 
 router.post("/deleteChat", checkAuth, async (req: RequestWithCustomSession, res: Response) => {
   const chatId = req.body.chatId;
@@ -229,13 +238,16 @@ router.post("/deleteChat", checkAuth, async (req: RequestWithCustomSession, res:
   try {
     await firestore.collection("chats").doc(chatId).delete();
     const userRef = firestore.doc(`users/${req.uid}`);
+    if (!userRef) {
+      throw new BadRequestError('User does not exist');
+    }
     await userRef.update({
-      chats: FieldValue.arrayRemove(chatId), // Use FieldValue
+      chats: FieldValue.arrayRemove(chatId), 
     });
-    res.status(200).send(''); // Send an empty response
+    res.status(200).send(''); 
   } catch (error) {
     console.error(error);
-    throw new Error('Error deleting chat');
+    throw new InternalServerError('Error deleting chat');
   }
 });
 
