@@ -45,6 +45,7 @@
     "gpt-tokens": "^1.1.2",
     "helmet": "^7.0.0",
     "openai": "^4.4.0",
+    "os": "^0.1.2",
     "path": "^0.12.7",
     "protobufjs": "^7.2.5",
     "socket.io": "^4.7.2"

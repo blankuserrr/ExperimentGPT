@@ -13,52 +13,68 @@ import http from "http";
 import { Server } from "socket.io";
 import compression from "compression";
 import { BadRequestError, errorHandler } from "./error";
+import cluster from "cluster";
+import os from "os";
 
-dotenv.config();
-
-const app = express();
-const server = http.createServer(app);
-const io = new Server(server);
-
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cors());
-app.use(compression());
-app.use(
-  session({
-    store: new FirestoreStore({
-      dataset: firestore, 
-      kind: "express-sessions",
-    }),
-    secret: process.env.SESSION_SECRET || 'default_secret',
-    resave: false,
-    saveUninitialized: true,
-    cookie: { secure: false },
-  })
-);
-
-declare module 'express-serve-static-core' {
-  interface Request {
-    io: typeof io;
+ declare module 'express-serve-static-core' {
+    interface Request {
+      io: typeof io;
+    }
   }
+
+if (cluster.isMaster) {
+  const numCPUs = os.cpus().length;
+
+  console.log(`Primary ${process.pid} is running with ${numCPUs} workers!`);
+
+  // Fork workers.
+  for (let i = 0; i < numCPUs; i++) {
+    cluster.fork();
+  }
+
+  cluster.on('exit', (worker, code, signal) => {
+    console.log(`worker ${worker.process.pid} died`);
+  });
+} else {
+  dotenv.config();
+
+  const app = express();
+  const server = http.createServer(app);
+  const io = new Server(server);
+
+  app.use(bodyParser.json());
+  app.use(bodyParser.urlencoded({ extended: true }));
+  app.use(cors());
+  app.use(compression());
+  app.use(
+    session({
+      store: new FirestoreStore({
+        dataset: firestore, 
+        kind: "express-sessions",
+      }),
+      secret: process.env.SESSION_SECRET || 'default_secret',
+      resave: false,
+      saveUninitialized: true,
+      cookie: { secure: false },
+    })
+  );
+
+
+  app.use((req: Request, res: Response, next: NextFunction) => {
+    req.io = io;
+    next();
+  });
+
+  app.set("view engine", "ejs");
+  app.set("views", path.join(__dirname, "public"));
+
+  app.use(express.static(path.join(__dirname, "public")));
+  app.use("/chats", express.static(path.join(__dirname, "public/chats")));
+
+  app.use("/", routes);
+
+  // Use the error handler middleware
+  app.use(errorHandler);
+
+  server.listen(3000);
 }
-
-app.use((req: Request, res: Response, next: NextFunction) => {
-  req.io = io;
-  next();
-});
-
-app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "public"));
-
-app.use(express.static(path.join(__dirname, "public")));
-app.use("/chats", express.static(path.join(__dirname, "public/chats")));
-
-app.use("/", routes);
-
-// Use the error handler middleware
-app.use(errorHandler);
-
-server.listen(3000, () => {
-  console.log("Server is now running at port 3000!");
-});
