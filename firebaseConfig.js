@@ -3,11 +3,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.firebase = exports.firestore = void 0;
-const app_1 = __importDefault(require("firebase/app"));
-exports.firebase = app_1.default;
-require("firebase/auth");
-const firestore_1 = require("@google-cloud/firestore");
+exports.firebase = exports.auth = exports.firestore = void 0;
+const app_1 = require("firebase/app");
+const firestore_1 = require("firebase/firestore");
+const auth_1 = require("firebase/auth");
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const firebaseConfig = {
@@ -19,9 +18,9 @@ const firebaseConfig = {
     appId: process.env.FIREBASE_APP_ID,
     measurementId: process.env.FIREBASE_MEASUREMENT_ID,
 };
-app_1.default.initializeApp(firebaseConfig);
-const firestore = new firestore_1.Firestore({
-    projectId: process.env.FIREBASE_PROJECT_ID,
-    keyFilename: "secrets/experimentgpt-b7411-firebase-adminsdk-k8f78-d5b8e11e63.json",
-});
+const app = (0, app_1.initializeApp)(firebaseConfig);
+exports.firebase = app;
+const firestore = (0, firestore_1.getFirestore)(app);
 exports.firestore = firestore;
+const auth = (0, auth_1.getAuth)(app);
+exports.auth = auth;

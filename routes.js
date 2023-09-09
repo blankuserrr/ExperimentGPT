@@ -7,8 +7,9 @@ const express_1 = require("express");
 const openai_1 = __importDefault(require("openai"));
 const gpt_tokens_1 = require("gpt-tokens");
 const firebaseConfig_1 = require("./firebaseConfig");
-const firestore_1 = require("@google-cloud/firestore");
 const error_1 = require("./error");
+const firestore_1 = require("firebase/firestore");
+const auth_1 = require("firebase/auth");
 const systemPrompt = "You are a helpful assistant.";
 const router = (0, express_1.Router)();
 const openai = new openai_1.default({
@@ -17,21 +18,23 @@ const openai = new openai_1.default({
 const checkAuth = (req, res, next) => {
     const sessionReq = req;
     if (sessionReq.session.userId) {
+        console.log('User is authenticated, user ID:', sessionReq.session.userId);
         sessionReq.uid = sessionReq.session.userId;
         next();
     }
     else {
+        console.log('User is not authenticated, redirecting to login');
         res.redirect("/login");
     }
 };
 router.get("/", checkAuth, async (req, res) => {
-    const userRef = firebaseConfig_1.firestore.doc(`users/${req.uid}`);
-    const userDoc = await userRef.get();
-    const chatIds = userDoc.exists ? userDoc.data()?.chats : [];
+    const userRef = (0, firestore_1.doc)(firebaseConfig_1.firestore, `users/${req.uid}`);
+    const userDoc = await (0, firestore_1.getDoc)(userRef);
+    const chatIds = userDoc.exists() ? userDoc.data()?.chats : [];
     const chats = await Promise.all(chatIds.map(async (chatId) => {
-        const chatRef = firebaseConfig_1.firestore.collection("chats").doc(chatId);
-        const chatDoc = await chatRef.get();
-        if (chatDoc.exists) {
+        const chatRef = (0, firestore_1.doc)(firebaseConfig_1.firestore, "chats", chatId);
+        const chatDoc = await (0, firestore_1.getDoc)(chatRef);
+        if (chatDoc.exists()) {
             return { id: chatId, name: chatDoc.data()?.name };
         }
         else {
@@ -44,9 +47,9 @@ router.get("/", checkAuth, async (req, res) => {
     res.render("chats/chats", { chats: existingChats });
 });
 router.get("/chat/:chatId", checkAuth, async (req, res) => {
-    const chatRef = firebaseConfig_1.firestore.doc(`chats/${req.params.chatId}`);
-    const chatDoc = await chatRef.get();
-    const messages = chatDoc.exists ? chatDoc.data()?.messages : [];
+    const chatRef = (0, firestore_1.doc)(firebaseConfig_1.firestore, 'chats', req.params.chatId);
+    const chatDoc = await (0, firestore_1.getDoc)(chatRef);
+    const messages = chatDoc.exists() ? chatDoc.data()?.messages : [];
     res.render("index", {
         messages: messages,
         chatId: req.params.chatId,
@@ -58,10 +61,10 @@ router.get("/login", (req, res) => {
 });
 router.post("/sendMessage/:chatId", checkAuth, async (req, res) => {
     const userMessage = req.body.userMessage;
-    const chatRef = firebaseConfig_1.firestore.collection("chats").doc(req.params.chatId);
-    const chatDoc = await chatRef.get();
-    let messages = chatDoc.exists ? chatDoc.data()?.messages : [];
-    if (!chatDoc.exists) {
+    const chatRef = (0, firestore_1.doc)(firebaseConfig_1.firestore, 'chats', req.params.chatId);
+    const chatDoc = await (0, firestore_1.getDoc)(chatRef);
+    let messages = chatDoc.exists() ? chatDoc.data()?.messages : [];
+    if (!chatDoc.exists()) {
         throw new error_1.BadRequestError('Chat does not exist');
     }
     messages.push({ role: "system", content: systemPrompt }, { role: "user", content: userMessage });
@@ -79,7 +82,7 @@ router.post("/sendMessage/:chatId", checkAuth, async (req, res) => {
     messages.push({ role: "system", content: responseContent });
     req.io.emit("message finished");
     // Save chat history to Firestore
-    await chatRef.update({ messages });
+    await (0, firestore_1.setDoc)(chatRef, { messages });
     // Calculate tokens used
     const usageInfo = new gpt_tokens_1.GPTTokens({
         model: "gpt-3.5-turbo-0613",
@@ -94,12 +97,10 @@ router.post("/sendMessage/:chatId", checkAuth, async (req, res) => {
 router.post("/register", async (req, res) => {
     const { email, password } = req.body;
     try {
-        const userCredential = await firebaseConfig_1.firebase
-            .auth()
-            .createUserWithEmailAndPassword(email, password);
+        const userCredential = await (0, auth_1.createUserWithEmailAndPassword)(firebaseConfig_1.auth, email, password);
         const uid = userCredential.user?.uid;
-        const userRef = firebaseConfig_1.firestore.doc(`users/${uid}`);
-        await userRef.set({ chats: [] });
+        const userRef = (0, firestore_1.doc)(firebaseConfig_1.firestore, `users/${uid}`);
+        await (0, firestore_1.setDoc)(userRef, { chats: [] });
         res.status(200).send();
     }
     catch (error) {
@@ -109,30 +110,40 @@ router.post("/register", async (req, res) => {
 router.post("/login", async (req, res) => {
     const { email, password } = req.body;
     try {
-        const userCredential = await firebaseConfig_1.firebase
-            .auth()
-            .signInWithEmailAndPassword(email, password);
-        req.session.regenerate((err) => {
-            if (err) {
-                throw new error_1.InternalServerError('Error regenerating session');
-            }
-            req.session.userId = userCredential.user?.uid;
-            res.status(200).send();
-        });
+        const userCredential = await (0, auth_1.signInWithEmailAndPassword)(firebaseConfig_1.auth, email, password);
+        if (userCredential.user && userCredential.user.uid) {
+            req.session.regenerate((err) => {
+                if (err) {
+                    console.error('Error regenerating session:', err);
+                    throw new error_1.InternalServerError('Error regenerating session');
+                }
+                req.session.userId = userCredential.user.uid;
+                console.log('Session regenerated and user ID set:', userCredential.user.uid);
+                res.status(200).send();
+            });
+        }
+        else {
+            console.error('User or user ID is undefined');
+            throw new error_1.UnauthorizedError('User or user ID is undefined');
+        }
     }
     catch (error) {
+        console.error('Error logging in:', error);
         throw new error_1.UnauthorizedError('Error logging in');
     }
 });
 router.post("/logout", checkAuth, async (req, res) => {
     try {
-        await firebaseConfig_1.firebase.auth().signOut();
+        await (0, auth_1.signOut)(firebaseConfig_1.auth);
         req.session.destroy((err) => {
             if (err) {
                 console.log(err);
+                res.status(500).send("Error logging out");
+            }
+            else {
+                res.redirect("/login");
             }
         });
-        res.redirect("/login");
     }
     catch (error) {
         console.error(error);
@@ -142,16 +153,25 @@ router.post("/logout", checkAuth, async (req, res) => {
 router.post("/createChat", checkAuth, async (req, res) => {
     try {
         const now = new Date();
-        const chatName = `${now.getDate()}-${now.getMonth() + 1}-${now.getFullYear()}:${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`;
-        const chatId = firebaseConfig_1.firestore.collection("chats").doc().id;
-        const chatRef = firebaseConfig_1.firestore.doc(`chats/${chatId}`);
-        await chatRef.set({ messages: [], name: chatName });
-        const userRef = firebaseConfig_1.firestore.doc(`users/${req.uid}`);
-        if (!userRef) {
+        const timeString = now.toLocaleTimeString([], { hour12: true });
+        const is12HourFormat = timeString.includes("AM") || timeString.includes("PM");
+        const formattedTime = is12HourFormat ? timeString : now.toLocaleTimeString([], { hour12: false });
+        const chatName = `${now.getDate()}-${now.getMonth() + 1}-${now.getFullYear()}: ${formattedTime}`;
+        // Create a new chat document with a random ID
+        const chatRef = (0, firestore_1.doc)((0, firestore_1.collection)(firebaseConfig_1.firestore, 'chats'));
+        // Set the chat document data
+        await (0, firestore_1.setDoc)(chatRef, { messages: [], name: chatName });
+        if (!req.uid) {
+            throw new error_1.BadRequestError('User ID is required');
+        }
+        const userRef = (0, firestore_1.doc)(firebaseConfig_1.firestore, 'users', req.uid);
+        const userDoc = await (0, firestore_1.getDoc)(userRef);
+        if (!userDoc.exists()) {
             throw new error_1.BadRequestError('User does not exist');
         }
-        await userRef.update({
-            chats: firestore_1.FieldValue.arrayUnion(chatRef.id),
+        // Update the user document with the new chat ID
+        await (0, firestore_1.updateDoc)(userRef, {
+            chats: (0, firestore_1.arrayUnion)(chatRef.id),
         });
         res.redirect(`/chat/${chatRef.id}`);
     }
@@ -162,9 +182,9 @@ router.post("/createChat", checkAuth, async (req, res) => {
 });
 router.get("/getChats", checkAuth, async (req, res) => {
     try {
-        const userRef = firebaseConfig_1.firestore.doc(`users/${req.uid}`);
-        const userDoc = await userRef.get();
-        const chats = userDoc.exists ? userDoc.data()?.chats : [];
+        const userRef = (0, firestore_1.doc)(firebaseConfig_1.firestore, `users/${req.uid}`);
+        const userDoc = await (0, firestore_1.getDoc)(userRef);
+        const chats = userDoc.exists() ? userDoc.data()?.chats : [];
         res.status(200).send(chats);
     }
     catch (error) {
@@ -173,14 +193,14 @@ router.get("/getChats", checkAuth, async (req, res) => {
     }
 });
 router.post("/clearChat/:chatId", checkAuth, async (req, res) => {
-    const chatRef = firebaseConfig_1.firestore.doc(`chats/${req.params.chatId}`);
-    const chatDoc = await chatRef.get();
-    const chatName = chatDoc.exists ? chatDoc.data()?.name : "";
-    if (!chatDoc.exists) {
+    const chatRef = (0, firestore_1.doc)(firebaseConfig_1.firestore, `chats/${req.params.chatId}`);
+    const chatDoc = await (0, firestore_1.getDoc)(chatRef);
+    const chatName = chatDoc.exists() ? chatDoc.data()?.name : "";
+    if (!chatDoc.exists()) {
         throw new error_1.BadRequestError('Chat does not exist');
     }
     // Set the messages of the chat to an empty array and preserve the name
-    await chatRef.set({ messages: [], name: chatName });
+    await (0, firestore_1.setDoc)(chatRef, { messages: [], name: chatName });
     res.status(200).send();
 });
 router.post("/deleteChat", checkAuth, async (req, res) => {
@@ -189,13 +209,14 @@ router.post("/deleteChat", checkAuth, async (req, res) => {
         throw new error_1.BadRequestError('Chat ID is required');
     }
     try {
-        await firebaseConfig_1.firestore.collection("chats").doc(chatId).delete();
-        const userRef = firebaseConfig_1.firestore.doc(`users/${req.uid}`);
-        if (!userRef) {
+        await (0, firestore_1.deleteDoc)((0, firestore_1.doc)(firebaseConfig_1.firestore, `chats/${chatId}`));
+        const userRef = (0, firestore_1.doc)(firebaseConfig_1.firestore, `users/${req.uid}`);
+        const userDoc = await (0, firestore_1.getDoc)(userRef);
+        if (!userDoc.exists()) {
             throw new error_1.BadRequestError('User does not exist');
         }
-        await userRef.update({
-            chats: firestore_1.FieldValue.arrayRemove(chatId),
+        await (0, firestore_1.updateDoc)(userRef, {
+            chats: (0, firestore_1.arrayRemove)(chatId),
         });
         res.status(200).send('');
     }

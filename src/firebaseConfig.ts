@@ -1,6 +1,6 @@
-import firebase from "firebase/app";
-import "firebase/auth";
-import { Firestore } from "@google-cloud/firestore";
+import { initializeApp } from "firebase/app";
+import { getFirestore } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -15,12 +15,8 @@ const firebaseConfig = {
   measurementId: process.env.FIREBASE_MEASUREMENT_ID,
 };
 
-firebase.initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
+const firestore = getFirestore(app);
+const auth = getAuth(app);
 
-const firestore = new Firestore({
-  projectId: process.env.FIREBASE_PROJECT_ID,
-  keyFilename:
-    "secrets/experimentgpt-b7411-firebase-adminsdk-k8f78-d5b8e11e63.json",
-});
-
-export { firestore, firebase };
+export { firestore, auth, app as firebase };

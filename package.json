@@ -29,8 +29,6 @@
   },
   "homepage": "https://github.com/Honkychunkymonkey/NJSChatAiTest#readme",
   "dependencies": {
-    "@google-cloud/connect-firestore": "^2.0.2",
-    "@google-cloud/firestore": "^6.7.0",
     "@types/compression": "^1.7.3",
     "@types/prismjs": "^1.26.0",
     "body-parser": "^1.20.2",
@@ -40,7 +38,7 @@
     "ejs": "^3.1.9",
     "express": "^4.18.2",
     "express-session": "^1.17.3",
-    "firebase": "^8.10.0",
+    "firebase": "^10.3.1",
     "google-gax": "^4.0.3",
     "gpt-tokens": "^1.1.2",
     "helmet": "^7.0.0",
@@ -53,6 +51,7 @@
   "devDependencies": {
     "@types/express": "^4.17.17",
     "@types/express-session": "^1.17.7",
+    "@types/firebase": "^3.2.1",
     "@types/jquery": "^3.5.18"
   }
 }
