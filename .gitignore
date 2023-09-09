@@ -2,7 +2,7 @@
 *.replit
 replit.nix
 
-# Test resuklts
+# Test results
 /tests/Test Chats/*.json
 /playwright-report
 /playwright-report/*.html
@@ -25,5 +25,14 @@ node_modules/
 *.env.production.local
 *.env.local
 
-# ide specifc files
+# ide specific files
 *.vscode
+
+# Custom files
+error.js
+firebaseConfig.js
+index.js
+routes.js
+public/script.js
+public/chats/chat.js
+public/auth/auth.js

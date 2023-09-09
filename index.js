@@ -18,7 +18,7 @@ const compression_1 = __importDefault(require("compression"));
 const error_1 = require("./error");
 const cluster_1 = __importDefault(require("cluster"));
 const os_1 = __importDefault(require("os"));
-if (cluster_1.default.isMaster) {
+if (cluster_1.default.isPrimary) {
     const numCPUs = os_1.default.cpus().length;
     console.log(`Primary ${process.pid} is running with ${numCPUs} workers!`);
     // Fork workers.
@@ -57,7 +57,6 @@ else {
     app.use(express_1.default.static(path_1.default.join(__dirname, "public")));
     app.use("/chats", express_1.default.static(path_1.default.join(__dirname, "public/chats")));
     app.use("/", routes_1.default);
-    // Use the error handler middleware
     app.use(error_1.errorHandler);
     server.listen(3000);
 }

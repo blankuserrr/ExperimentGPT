@@ -116,7 +116,6 @@ router.post("/login", async (req, res) => {
             if (err) {
                 throw new error_1.InternalServerError('Error regenerating session');
             }
-            // Save user ID in new session
             req.session.userId = userCredential.user?.uid;
             res.status(200).send();
         });
@@ -142,11 +141,8 @@ router.post("/logout", checkAuth, async (req, res) => {
 });
 router.post("/createChat", checkAuth, async (req, res) => {
     try {
-        // Get the current date and time
         const now = new Date();
-        // Format the date and time as d-m-y:time
         const chatName = `${now.getDate()}-${now.getMonth() + 1}-${now.getFullYear()}:${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`;
-        // Create a unique ID for the chat
         const chatId = firebaseConfig_1.firestore.collection("chats").doc().id;
         const chatRef = firebaseConfig_1.firestore.doc(`chats/${chatId}`);
         await chatRef.set({ messages: [], name: chatName });

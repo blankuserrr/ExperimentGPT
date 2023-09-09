@@ -22,7 +22,7 @@ import os from "os";
     }
   }
 
-if (cluster.isMaster) {
+if (cluster.isPrimary) {
   const numCPUs = os.cpus().length;
 
   console.log(`Primary ${process.pid} is running with ${numCPUs} workers!`);
@@ -73,7 +73,6 @@ if (cluster.isMaster) {
 
   app.use("/", routes);
 
-  // Use the error handler middleware
   app.use(errorHandler);
 
   server.listen(3000);

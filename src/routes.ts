@@ -152,7 +152,6 @@ router.post("/login", async (req: Request, res: Response) => {
       if (err) {
         throw new InternalServerError('Error regenerating session');
       }
-      // Save user ID in new session
       (req.session as CustomSession).userId = userCredential.user?.uid;
       res.status(200).send();
     });
@@ -179,14 +178,11 @@ router.post("/logout", checkAuth, async (req: Request, res: Response) => {
 
 router.post("/createChat", checkAuth, async (req: RequestWithCustomSession, res: Response) => {
   try {
-    // Get the current date and time
     const now = new Date();
-    // Format the date and time as d-m-y:time
     const chatName = `${now.getDate()}-${
       now.getMonth() + 1
     }-${now.getFullYear()}:${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`;
 
-    // Create a unique ID for the chat
     const chatId = firestore.collection("chats").doc().id;
 
     const chatRef = firestore.doc(`chats/${chatId}`);
