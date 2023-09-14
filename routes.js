@@ -9,7 +9,7 @@ const gpt_tokens_1 = require("gpt-tokens");
 const firebaseConfig_1 = require("./firebaseConfig");
 const error_1 = require("./error");
 const lite_1 = require("firebase/firestore/lite");
-const auth_1 = require("@firebase/auth");
+const getauth = require("@firebase/auth");
 const systemPrompt = "You are a helpful assistant.";
 const router = (0, express_1.Router)();
 const openai = new openai_1.default({
@@ -96,7 +96,7 @@ router.post("/sendMessage/:chatId", checkAuth, async (req, res) => {
 router.post("/register", async (req, res) => {
     const { email, password } = req.body;
     try {
-        const userCredential = await (0, auth_1.createUserWithEmailAndPassword)(firebaseConfig_1.auth, email, password);
+        const userCredential = await (0, getauth.createUserWithEmailAndPassword)(firebaseConfig_1.auth, email, password);
         const uid = userCredential.user?.uid;
         const userRef = (0, lite_1.doc)(firebaseConfig_1.firestore, `users/${uid}`);
         await (0, lite_1.setDoc)(userRef, { chats: [] });
@@ -109,7 +109,7 @@ router.post("/register", async (req, res) => {
 router.post("/login", async (req, res) => {
     const { email, password } = req.body;
     try {
-        const userCredential = await (0, auth_1.signInWithEmailAndPassword)(firebaseConfig_1.auth, email, password);
+        const userCredential = await (0, getauth.signInWithEmailAndPassword)(firebaseConfig_1.auth, email, password);
         if (userCredential.user && userCredential.user.uid) {
             req.session.regenerate((err) => {
                 if (err) {
@@ -132,7 +132,7 @@ router.post("/login", async (req, res) => {
 });
 router.post("/logout", checkAuth, async (req, res) => {
     try {
-        await (0, auth_1.signOut)(firebaseConfig_1.auth);
+        await (0, getauth.signOut)(firebaseConfig_1.auth);
         req.session.destroy((err) => {
             if (err) {
                 console.log(err);

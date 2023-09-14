@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.firebase = exports.auth = exports.firestore = void 0;
 const app_1 = require("@firebase/app");
 const lite_1 = require("firebase/firestore/lite");
-const auth_1 = require("@firebase/auth");
+const { getAuth } = require("@firebase/auth");
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const firebaseConfig = {
