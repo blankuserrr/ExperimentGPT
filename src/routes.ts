@@ -7,8 +7,8 @@ import { firestore, firebase, auth } from "./firebaseConfig";
 import session from 'express-session';
 import { Server as SocketIoServer } from "socket.io";
 import { BadRequestError, UnauthorizedError, InternalServerError } from './error';
-import { doc, getDoc, setDoc, updateDoc, deleteDoc, arrayUnion, arrayRemove, collection } from "firebase/firestore";
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "firebase/auth";
+import { doc, getDoc, setDoc, updateDoc, deleteDoc, arrayUnion, arrayRemove, collection } from "firebase/firestore/lite";
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "@firebase/auth";
 
 export interface CustomSession extends session.Session {
   userId?: string; // Add your custom property here
@@ -35,7 +35,6 @@ const openai = new OpenAI({
 const checkAuth = (req: Request, res: Response, next: NextFunction) => {
   const sessionReq = req as RequestWithCustomSession;
   if (sessionReq.session.userId) {
-    console.log('User is authenticated, user ID:', sessionReq.session.userId);
     sessionReq.uid = sessionReq.session.userId;
     next();
   } else {
@@ -113,7 +112,7 @@ router.post("/sendMessage/:chatId", checkAuth, async (req: RequestWithCustomSess
   req.io.emit("message finished");
 
   // Save chat history to Firestore
-  await setDoc(chatRef, { messages });
+  await updateDoc(chatRef, { messages });
 
   // Calculate tokens used
   const usageInfo = new GPTTokens({
@@ -153,7 +152,6 @@ router.post("/login", async (req: Request, res: Response) => {
           throw new InternalServerError('Error regenerating session');
         }
         (req.session as CustomSession).userId = userCredential.user.uid;
-        console.log('Session regenerated and user ID set:', userCredential.user.uid);
         res.status(200).send();
       });
     } else {

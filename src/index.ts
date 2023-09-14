@@ -13,9 +13,7 @@ import http from "http";
 import { Server } from "socket.io";
 import compression from "compression";
 import { BadRequestError, errorHandler } from "./error";
-import cluster from "cluster";
-import os from "os";
-import { collection, doc, setDoc, getDoc, deleteDoc } from 'firebase/firestore';
+import { collection, doc, setDoc, getDoc, deleteDoc } from 'firebase/firestore/lite';
 
 
 declare module 'express-serve-static-core' {
@@ -34,14 +32,11 @@ class FirestoreStore extends Store {
       const docRef = doc(collection(firestore, 'sessions'), sid);
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
-        console.log('Session found:', docSnap.data());
         callback(null, docSnap.data() as SessionData);
       } else {
-        console.log('Session not found');
         callback(null, null);
       }
     } catch (err) {
-      console.error('Error getting session:', err);
       callback(err);
     }
   }
@@ -76,31 +71,14 @@ if (userId) {
   async destroy(sid: string, callback?: (err?: any) => void) {
     try {
       const docRef = doc(collection(firestore, 'sessions'), sid);
-      console.log('Destroying session:', sid);
       await deleteDoc(docRef);
       if (callback) callback(null);
     } catch (err) {
-      console.error('Error destroying session:', err);
       if (callback) callback(err);
     }
   }
 }
 
- 
-if (cluster.isPrimary) {
-  const numCPUs = os.cpus().length;
-
-  console.log(`Primary ${process.pid} is running with ${numCPUs} workers!`);
-
-  // Fork workers.
-  for (let i = 0; i < numCPUs; i++) {
-    cluster.fork();
-  }
-
-  cluster.on('exit', (worker, code, signal) => {
-    console.log(`worker ${worker.process.pid} died`);
-  });
-} else {
   dotenv.config();
 
   const app = express();
@@ -141,5 +119,6 @@ if (!sessionSecret) {
 
   app.use(errorHandler);
 
-  server.listen(3000);
-}
+  server.listen(3000, () => {
+    console.log("ExperimentGPT is now running at port 3000!");
+  });
