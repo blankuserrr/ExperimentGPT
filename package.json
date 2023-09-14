@@ -43,11 +43,11 @@
     "google-gax": "^4.0.3",
     "gpt-tokens": "^1.1.2",
     "helmet": "^7.0.0",
+    "idb": "^7.1.1",
     "openai": "^4.7.0",
     "path": "^0.12.7",
     "protobufjs": "^7.2.5",
-    "socket.io": "^4.7.2",
-    "idb": "7.1.1"
+    "socket.io": "^4.7.2"
   },
   "devDependencies": {
     "@types/express": "^4.17.17",
