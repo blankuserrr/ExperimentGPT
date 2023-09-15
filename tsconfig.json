@@ -13,7 +13,7 @@
   "include": [
     "src/**/*.ts",
     "./custom.d.ts"
-  ],
+, "public/chats/chat.ts", "public/auth/auth.ts"  ],
   "exclude": [
     "node_modules"
   ]

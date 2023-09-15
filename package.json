@@ -5,12 +5,13 @@
   "main": "index.js",
   "scripts": {
     "startnode": "node index.js",
-    "startbun": "bun run index.js",
+    "startbun": "bun run index.ts",
     "test": "npx playwright test --reporter=html -j 3",
     "push": "git push -u origin main",
     "pull": "git pull origin main",
     "discard": "git checkout . && npm prune",
-    "commit": "commit.bat"
+    "wcommit": "commit.bat",
+    "scommit": "./commit.sh"
   },
   "repository": {
     "type": "git",
