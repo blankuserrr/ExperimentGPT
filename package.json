@@ -4,7 +4,8 @@
   "description": "Node.JS Chat App using the OpenAi API",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "startnode": "node index.js",
+    "startbun": "bun run index.js",
     "test": "npx playwright test --reporter=html -j 3",
     "push": "git push -u origin main",
     "pull": "git pull origin main",
