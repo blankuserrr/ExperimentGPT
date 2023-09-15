@@ -11,7 +11,7 @@
     "discard": "git checkout . && npm prune",
     "wcommit": "commit.bat",
     "scommit": "./commit.sh",
-    "build": "bun build ./src/public/auth/auth.ts --outfile=./ExperimentGPT/public/auth/auth.js && bun build ./src/public/script.ts --outfile=./ExperimentGPT/public/script.js && bun build ./src/public/chats/chat.ts --outfile=./ExperimentGPT/public/chats/chat.js"
+    "build": "bun build ./src/public/auth/auth.ts --outfile=./public/auth/auth.js && bun build ./src/public/script.ts --outfile=./public/script.js && bun build ./src/public/chats/chat.ts --outfile=./public/chats/chat.js"
   },
   "repository": {
     "type": "git",
