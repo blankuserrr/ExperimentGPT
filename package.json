@@ -29,6 +29,7 @@
   },
   "homepage": "https://github.com/Honkychunkymonkey/NJSChatAiTest#readme",
   "dependencies": {
+    "@firebase/app": "^0.9.19",
     "@firebase/auth": "^1.3.0",
     "@types/compression": "^1.7.3",
     "@types/prismjs": "^1.26.0",
