@@ -1,9 +1,7 @@
 import express, { Request, Response, NextFunction } from "express";
 import bodyParser from "body-parser";
-import dotenv from "dotenv";
 import cors from "cors";
 import path from "path";
-import helmet from "helmet";
 import { Store, SessionData } from 'express-session';
 import session from "express-session";
 import routes from "./routes.ts";
@@ -79,13 +77,11 @@ if (userId) {
   }
 }
 
-  dotenv.config();
-
   const app = express();
   const server = http.createServer(app);
   const io = new Server(server);
 
-  const sessionSecret = process.env.SESSION_SECRET;
+  const sessionSecret = Bun.env.SESSION_SECRET;
 if (!sessionSecret) {
   throw new Error('SESSION_SECRET is not set');
 }
@@ -100,9 +96,10 @@ if (!sessionSecret) {
     secret: sessionSecret,
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: false },
+    cookie: { secure: false, maxAge: 7 * 24 * 60 * 60 * 1000 },
   })
 );
+
 
   app.use((req: Request, res: Response, next: NextFunction) => {
     req.io = io;

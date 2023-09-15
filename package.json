@@ -1,17 +1,17 @@
 {
   "name": "njschataitest",
-  "version": "1.0.0",
+  "version": "1.5.5",
   "description": "Node.JS Chat App using the OpenAi API",
-  "main": "index.js",
+  "main": "index.ts",
   "scripts": {
     "startnode": "node index.js",
     "startbun": "bun run index.ts",
-    "test": "npx playwright test --reporter=html -j 3",
     "push": "git push -u origin main",
     "pull": "git pull origin main",
     "discard": "git checkout . && npm prune",
     "wcommit": "commit.bat",
-    "scommit": "./commit.sh"
+    "scommit": "./commit.sh",
+    "build": "bun build ./src/public/auth/auth.ts --outfile=./ExperimentGPT/public/auth/auth.js && bun build ./src/public/script.ts --outfile=./ExperimentGPT/public/script.js && bun build ./src/public/chats/chat.ts --outfile=./ExperimentGPT/public/chats/chat.js"
   },
   "repository": {
     "type": "git",
@@ -39,14 +39,12 @@
     "compression": "^1.7.4",
     "cors": "^2.8.5",
     "debug": "^4.3.4",
-    "dotenv": "^16.3.1",
     "ejs": "^3.1.9",
     "express": "^4.18.2",
     "express-session": "^1.17.3",
     "firebase": "^10.4.0",
     "google-gax": "^4.0.3",
     "gpt-tokens": "^1.1.2",
-    "helmet": "^7.0.0",
     "idb": "^7.1.1",
     "jake": "^10.8.7",
     "mime": "^3.0.0",

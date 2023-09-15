@@ -11,12 +11,12 @@ import { doc, getDoc, setDoc, updateDoc, deleteDoc, arrayUnion, arrayRemove, col
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "@firebase/auth";
 
 export interface CustomSession extends session.Session {
-  userId?: string; // Add your custom property here
+  userId?: string; 
 }
 
 interface RequestWithCustomSession extends Request {
   session: CustomSession;
-  uid?: string; // Add uid property here
+  uid?: string;
 }
 
 interface RequestWithIo extends Request {
@@ -29,7 +29,7 @@ const systemPrompt = "You are a helpful assistant.";
 
 const router = Router();
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
+  apiKey: Bun.env.OPENAI_API_KEY,
 });
 
 const checkAuth = (req: Request, res: Response, next: NextFunction) => {
