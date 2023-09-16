@@ -1,38 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="A smart, complex, and easy to use AI Chatbot. Made in collaboration with OpenAI.">
-  <title>Chats</title>
-  <link rel="icon" type="image/x-icon" href="/assets/favicon/favicon.webp">
-  <link rel="stylesheet" href="/chats/chats.css" async>
-  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap" as="style">
-  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap"></noscript> <!-- Fallback for no JavaScript -->
-</head>
-<body>
-  <form id="logoutForm" action="/logout" method="post">
-    <button type="submit">Logout</button>
-  </form>
-  <form id="createChatForm" action="/createChat" method="post">
-    <button type="submit">Create Chat</button>
-  </form>
-  <div id="chats">
-    <button id="chatSelect">Select a chat</button>
-    <div id="chatDropdown" class="dropdown-content">
-      <% chats.forEach((chat) => { %>
-  <div class="chat-item">
-    <a href="/chat/<%= chat.id %>" id="<%= chat.id %>"><%= chat.name %></a>
-    <form action="/deleteChat" method="post" hx-post="/deleteChat" hx-target="closest .chat-item" hx-swap="outerHTML">
-  <input type="hidden" name="chatId" value="<%= chat.id %>">
-  <button type="submit" class="delete-chat">X</button>
-</form>
-  </div>
-<% }); %>
-    </div>
-  </div>
-  <script src="https://unpkg.com/htmx.org@1.9.5"></script>
-  <script src="/chats/chat.js"></script>
-</body>
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta name="description" content="A smart, complex, and easy to use AI Chatbot. Made in collaboration with OpenAI." />
+		<title>Chats</title>
+		<link rel="icon" type="image/x-icon" href="/assets/favicon/favicon.webp" />
+		<link rel="stylesheet" href="/chats/chats.css" async />
+		<link rel="preload" href="https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap" as="style" />
+		<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap" /></noscript>
+		<!-- Fallback for no JavaScript -->
+	</head>
+	<body>
+		<form id="logoutForm" action="/logout" method="post">
+			<button type="submit">Logout</button>
+		</form>
+		<form id="createChatForm" action="/createChat" method="post">
+			<button type="submit">Create Chat</button>
+		</form>
+		<div id="chats">
+			<button id="chatSelect">Select a chat</button>
+			<div id="chatDropdown" class="dropdown-content">
+				<% chats.forEach((chat) => { %>
+				<div class="chat-item">
+					<a href="/chat/<%= chat.id %>" id="<%= chat.id %>"><%= chat.name %></a>
+					<form action="/deleteChat" method="post" hx-post="/deleteChat" hx-target="closest .chat-item" hx-swap="outerHTML">
+						<input type="hidden" name="chatId" value="<%= chat.id %>" />
+						<button type="submit" class="delete-chat">X</button>
+					</form>
+				</div>
+				<% }); %>
+			</div>
+		</div>
+		<script src="https://unpkg.com/htmx.org@1.9.5"></script>
+		<script src="/chats/chat.js"></script>
+	</body>
 </html>

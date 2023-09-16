@@ -36,3 +36,4 @@ public/auth/auth.js
 
 # Bun specific files
 bun.lockb
+*bun.lockb
