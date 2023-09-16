@@ -29,9 +29,6 @@ node_modules/
 *.vscode
 
 # Custom files
-error.js
-firebaseConfig.js
-index.js
 routes.js
 public/script.js
 public/chats/chat.js
