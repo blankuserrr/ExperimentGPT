@@ -11,7 +11,7 @@
     "discard": "git checkout . && npm prune",
     "wcommit": "commit.bat",
     "scommit": "./commit.sh",
-    "build": "bun build ./src/public/auth/auth.ts --outfile=./public/auth/auth.js && bun build ./src/public/script.ts --outfile=./public/script.js && bun build ./src/public/chats/chat.ts --outfile=./public/chats/chat.js"
+    "build": "bun build ./src/public/auth/auth.ts --outfile=./public/auth/auth.js --minify && bun build ./src/public/script.ts --outfile=./public/script.js --minify && bun build ./src/public/chats/chat.ts --outfile=./public/chats/chat.js --minify"
   },
   "repository": {
     "type": "git",
@@ -43,12 +43,12 @@
     "express": "^4.18.2",
     "express-session": "^1.17.3",
     "firebase": "^10.4.0",
-    "google-gax": "^4.0.3",
+    "google-gax": "4.0.4",
     "gpt-tokens": "^1.1.2",
     "idb": "^7.1.1",
     "jake": "^10.8.7",
     "mime": "^3.0.0",
-    "openai": "^4.7.0",
+    "openai": "4.7.1",
     "path": "^0.12.7",
     "protobufjs": "^7.2.5",
     "socket.io": "^4.7.2"
@@ -57,7 +57,7 @@
     "@types/express": "^4.17.17",
     "@types/express-session": "^1.17.7",
     "@types/firebase": "^3.2.1",
-    "@types/jquery": "^3.5.18",
-    "@types/node-fetch": "^2.6.5"
+    "@types/node-fetch": "^2.6.5",
+    "bun-types": "^1.0.2"
   }
 }
