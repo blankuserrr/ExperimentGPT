@@ -1,35 +1,37 @@
 import { NextFunction, Request, Response } from "express";
 
-export class BadRequestError extends Error {
+export abstract class CustomError extends Error {
+	constructor(public message: string, public statusCode: number, public name: string) {
+		super(message);
+	}
+}
+
+export class BadRequestError extends CustomError {
 	constructor(message = "Bad Request") {
-		super(message);
-		this.name = "BadRequestError";
+		super(message, 400, "BadRequestError");
+		console.error(`[${new Date().toISOString()}] BadRequestError: ${message}`);
 	}
 }
 
-export class UnauthorizedError extends Error {
+export class UnauthorizedError extends CustomError {
 	constructor(message = "Unauthorized") {
-		super(message);
-		this.name = "UnauthorizedError";
+		super(message, 401, "UnauthorizedError");
+		console.error(`[${new Date().toISOString()}] UnauthorizedError: ${message}`);
 	}
 }
 
-export class InternalServerError extends Error {
+export class InternalServerError extends CustomError {
 	constructor(message = "Internal Server Error") {
-		super(message);
-		this.name = "InternalServerError";
+		super(message, 500, "InternalServerError");
+		console.error(`[${new Date().toISOString()}] InternalServerError: ${message}`);
 	}
 }
 
 export function errorHandler(err: Error, req: Request, res: Response, next: NextFunction) {
-	console.error(err.stack); // Log error stack trace
+	console.error(`[${new Date().toISOString()}] Error: ${err.message} Stack: ${err.stack}`); // Log error stack trace
 
-	if (err instanceof BadRequestError) {
-		res.status(400).send({ error: err.message });
-	} else if (err instanceof UnauthorizedError) {
-		res.status(401).send({ error: err.message });
-	} else if (err instanceof InternalServerError) {
-		res.status(500).send({ error: err.message });
+	if (err instanceof CustomError) {
+		res.status(err.statusCode).send({ error: err.message });
 	} else {
 		res.status(500).send({ error: "Unknown Error" });
 	}

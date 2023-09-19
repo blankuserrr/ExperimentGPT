@@ -67,6 +67,8 @@ body {
 	right: 20px;
 	top: 20px;
 	z-index: 1;
+  min-width: 95px;
+  max-width: 95px;
 }
 
 #toggleButton:hover {
