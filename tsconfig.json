@@ -1,19 +1,19 @@
 {
   "compilerOptions": {
-    "target": "ES2022",
-    "module": "CommonJS",
+    "target": "esnext",
+    "module": "esnext",
+    "lib": ["esnext", "dom"],
     "outDir": "./",
     "rootDir": "./src",
     "strict": true,
     "esModuleInterop": true,
     "typeRoots": ["./node_modules/@types"],
-    "allowImportingTsExtensions": true,
-    "noEmit": true
+    "types": ["bun-types"]
   },
   "include": [
     "src/**/*.ts",
     "./custom.d.ts"
-, "src/public/chats/chat.ts", "public/auth/auth.ts"  ],
+, "src/public/chats/chats.ts", "public/auth/auth.ts"  ],
   "exclude": [
     "node_modules"
   ]

@@ -1,6 +1,6 @@
 # ExperimentGPT
 
-Welcome to ExperimentGPT! This is a AI Chatbot that uses the ChatGPT API. I Currently it is in early alpha, and should be used as so, and not taken seriously. So far it has simple features such as just sending messages and clearing the conversation. The application is built with Bun.JS (previously Node.JS) and has a (still being worked on) semi modern frontend without any framework *(pure CSS!)* but it will be updated to use bootstrap in the future. 
+Welcome to ExperimentGPT! This is an AI Chatbot that uses the OpenAI API. So far it has features such as sending messages with support for streaming the response, multi-conversation management, authentication system, and clearing the conversation. The application is built with Bun (previously Node.JS) and has a (still being worked on) semi modern frontend without any framework *(pure CSS!)* but it will be updated to use bootstrap in the future. 
 
 ## Getting Started
 
@@ -8,9 +8,8 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-- Bun.JS
-- npm
-- Git
+- [Bun](https://bun.sh/)
+- Git (Only if contributing or pulling updated)
 
 ### Installation
 
@@ -36,15 +35,15 @@ To start the application, run:
 
 ```bun run index.ts``` *OR* ```bun --watch run index.ts``` (for development)
 
-The application will be available at `http://localhost:3000` (or whatever you set the port/URL to be.
+The application will be available at `http://localhost:3000` (or whatever you set the port/URL to be.)
 
 ## Future changes/Planned features
 
-- The editing and deleting of messages
-- Use of the OpenAI completions API to stream messages (typing effect) and the stopping of generation
-- Settings for local (in browser) chats
-- Pinecone support
-- Multi API support (Kobold, OpenRouter, Anthropic, (Local LLM support in far future))
+- The editing and deleting of messages.
+- Modification of my current use of the OpenAI API to implement the stopping of generation.
+- Settings for local (in browser) chats.
+- PineconeDB support (for nearly infinite memory using semantic search.)
+- Multi API support (OpenRouter, Anthropic, Azure, Replicate, HuggingFace, etc (Local LLMs like Kobld support in far future))
 
 ## License
 

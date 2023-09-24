@@ -4,14 +4,15 @@
   "description": "Bun.JS Chat App using the OpenAi API",
   "main": "index.ts",
   "scripts": {
-    "startnode": "node index.js",
-    "startbun": "bun run index.ts",
+    "nodestart": "node index.js",
+    "bunstart": "bun run index.ts",
     "push": "git push -u origin main",
     "pull": "git pull origin main",
     "discard": "git checkout . && npm prune",
     "wcommit": "commit.bat",
     "scommit": "./commit.sh",
-    "build": "bun build ./src/public/auth/auth.ts --outfile=./public/auth/auth.js --minify && bun build ./src/public/script.ts --outfile=./public/script.js --minify && bun build ./src/public/chats/chat.ts --outfile=./public/chats/chat.js --minify"
+    "build": "bun build ./src/public/auth/auth.ts --outfile=./public/auth/auth.js --minify  && bun build ./src/public/script.ts --outfile=./public/script.js --minify  && bun build ./src/public/chats/chats.ts --outfile=./public/chats/chats.js --minify",
+    "cypress:open": "cypress open"
   },
   "repository": {
     "type": "git",
@@ -48,7 +49,7 @@
     "idb": "^7.1.1",
     "jake": "^10.8.7",
     "mime": "^3.0.0",
-    "openai": "4.8.0",
+    "openai": "4.10.0",
     "path": "^0.12.7",
     "protobufjs": "^7.2.5",
     "socket.io": "^4.7.2"

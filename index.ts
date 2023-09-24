@@ -1,17 +1,19 @@
+/// <reference types="bun-types" />b
+
 import express, { Request, Response, NextFunction } from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
-import path from "path";
+import path, { dirname } from "path";
 import { Store, SessionData } from "express-session";
 import session from "express-session";
-import routes from "./routes.ts";
-import { CustomSession } from "./routes.ts";
-import { firestore } from "./firebaseConfig.ts";
 import http from "http";
 import { Server } from "socket.io";
 import compression from "compression";
-import { BadRequestError, errorHandler } from "./error.ts";
 import { collection, doc, setDoc, getDoc, deleteDoc } from "firebase/firestore/lite";
+import { fileURLToPath } from "url";
+import routes, { CustomSession } from "./lib/routes";
+import { firestore } from "./lib/firebaseConfig";
+import { BadRequestError, errorHandler } from "./lib/error";
 
 declare module "express-serve-static-core" {
 	interface Request {
@@ -103,6 +105,8 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 	req.io = io;
 	next();
 });
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "public"));

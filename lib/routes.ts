@@ -1,14 +1,14 @@
-import express, { Request, Response, NextFunction } from "express";
+import { Request, Response, NextFunction } from "express";
 import { Router } from "express";
 import { RequestHandler } from "express";
 import OpenAI from "openai";
-import { GPTTokens } from "gpt-tokens";
-import { firestore, firebase, auth } from "./firebaseConfig.ts";
+import { GPTTokens } from "gpt-tokens"
 import session from "express-session";
 import { Server as SocketIoServer } from "socket.io";
-import { BadRequestError, UnauthorizedError, InternalServerError } from "./error.ts";
 import { doc, getDoc, setDoc, updateDoc, deleteDoc, arrayUnion, arrayRemove, collection } from "firebase/firestore/lite";
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "@firebase/auth";
+import { firestore, auth } from "./firebaseConfig";
+import { BadRequestError, UnauthorizedError, InternalServerError } from "./error";
 
 export interface CustomSession extends session.Session {
 	userId?: string;
@@ -54,7 +54,6 @@ router.get("/", checkAuth, async (req: RequestWithCustomSession, res: Response) 
 			if (chatDoc.exists()) {
 				return { id: chatId, name: chatDoc.data()?.name };
 			} else {
-				// If the chat document does not exist, return null
 				return null;
 			}
 		})
@@ -118,8 +117,7 @@ router.post("/sendMessage/:chatId", checkAuth, async (req: RequestWithCustomSess
 	});
 
 	console.table({
-		"Tokens prompt": usageInfo.promptUsedTokens,
-		"Tokens total": usageInfo.usedTokens,
+		"Prompt price": "$"+usageInfo.usedUSD
 	});
 
 	res.status(200).send();
