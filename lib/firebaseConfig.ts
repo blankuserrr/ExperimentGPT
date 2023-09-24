@@ -1,3 +1,5 @@
+/// <reference types="bun-types" />b
+
 import { initializeApp } from "@firebase/app";
 import { getFirestore } from "firebase/firestore/lite";
 import { getAuth } from "@firebase/auth";

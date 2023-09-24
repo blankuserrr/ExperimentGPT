@@ -1,3 +1,5 @@
+/// <reference types="bun-types" />b
+
 import { Request, Response, NextFunction } from "express";
 import { Router } from "express";
 import { RequestHandler } from "express";
