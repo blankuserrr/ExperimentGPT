@@ -1,6 +1,6 @@
 # ExperimentGPT
 
-Welcome to ExperimentGPT! This is an AI Chatbot that uses the OpenAI API. So far it has features such as sending messages with support for streaming the response, multi-conversation management, authentication system, and clearing the conversation. The application is built with Bun (previously Node.JS) and has a (still being worked on) semi modern frontend without any framework *(pure CSS!)* but it will be updated to use bootstrap in the future. 
+Welcome to ExperimentGPT! This is an AI Chatbot that uses the OpenAI API. So far it has features such as sending and streaming messages, multi-conversation management, authentication, and clearing the conversation. The application is built with express and Bun (previously Node) and has a (still being worked on) semi modern frontend without any framework *(pure CSS!)* but it will be updated to use tailwind in the future. 
 
 ## Getting Started
 
@@ -33,18 +33,19 @@ These instructions will get you a copy of the project up and running on your loc
 
 To start the application, run:
 
-```bun run index.ts``` *OR* ```bun --watch run index.ts``` (for development)
+```bun index.ts```
 
 The application will be available at `http://localhost:3000` (or whatever you set the port/URL to be.)
 
 ## Future changes/Planned features
 
 - The editing and deleting of messages.
-- Modification of my current use of the OpenAI API to implement the stopping of generation.
-- Settings for local (in browser) chats.
+- API/Backend update for the stopping of generation.
+- Settings modal for greater configuration.
 - PineconeDB support (for nearly infinite memory using semantic search.)
 - Multi API support (OpenRouter, Anthropic, Azure, Replicate, HuggingFace, etc (Local LLMs like Kobld support in far future))
+- Node.js fallback if Bun isn't being used.
 
 ## License
 
-This project is licensed under the Creative Comms Attribution Share Alike 4.0 International Liscense - see the [LICENSE.md](LICENSE.md) file for details.
+This project is licensed under the Creative Comms Attribution Share Alike 4.0 International Liscense - see [LICENSE.md](LICENSE.md) for details.
