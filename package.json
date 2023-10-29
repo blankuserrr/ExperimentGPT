@@ -11,8 +11,7 @@
     "discard": "git checkout . && npm prune",
     "wcommit": "commit.bat",
     "scommit": "./commit.sh",
-    "build": "bun build ./src/public/auth/auth.ts --outfile=./public/auth/auth.js --minify  && bun build ./src/public/script.ts --outfile=./public/script.js --minify  && bun build ./src/public/chats/chats.ts --outfile=./public/chats/chats.js --minify",
-    "cypress:open": "cypress open"
+    "build": "bun build ./src/public/auth/auth.ts --outfile=./public/auth/auth.js --minify  && bun build ./src/public/script.ts --outfile=./public/script.js --minify  && bun build ./src/public/chats/chats.ts --outfile=./public/chats/chats.js --minify"
   },
   "repository": {
     "type": "git",
