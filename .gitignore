@@ -33,7 +33,3 @@ routes.js
 public/script.js
 public/chats/chat.js
 public/auth/auth.js
-
-# Bun specific files
-bun.lockb
-*bun.lockb
