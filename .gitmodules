@@ -1,0 +1,3 @@
+[submodule "ExperimentGPT"]
+	path = ExperimentGPT
+	url = https://github.com/Honkychunkymonkey/ExperimentGPT

@@ -1,0 +1,203 @@
+body {
+	margin: 0;
+	padding: 0;
+	background-color: #171717;
+	color: #faeaec;
+	font-family: "Noto Sans", sans-serif;
+}
+
+#chatContainer {
+	position: relative;
+	max-width: 80%;
+	height: 60%;
+	margin: 5% auto;
+	padding: 20px;
+	overflow: auto;
+	background-color: #3c101b;
+	border-radius: 20px;
+}
+
+#conversation div {
+	padding: 10px;
+	margin-bottom: 0;
+}
+
+#conversation div:first-child {
+	border-top-left-radius: 10px;
+	border-top-right-radius: 10px;
+}
+
+#conversation div:last-child {
+	border-bottom-left-radius: 10px;
+	border-bottom-right-radius: 10px;
+}
+
+.user,
+.system {
+	color: #faeaec;
+	background-color: #91273e;
+}
+
+.user:hover {
+	background-color: #b33a53;
+}
+
+.system:hover {
+	background-color: #b93a56;
+}
+
+.system {
+	background-color: #a92d4c;
+}
+
+#chatForm {
+	position: fixed;
+	bottom: 10px;
+	left: 50%;
+	width: 80%;
+	padding: 10px;
+	transform: translateX(-50%);
+	display: flex;
+	justify-content: space-between;
+	background-color: #a92d4c;
+	border-radius: 20px;
+}
+
+#userMessage {
+	width: 70%;
+	padding: 10px;
+	color: #faeaec;
+	background-color: #91273e;
+	border: none;
+	border-radius: 10px;
+}
+
+#sendButtonContainer {
+	width: 25%;
+	display: flex;
+	justify-content: flex-end;
+}
+
+button {
+	padding: 10px 20px;
+	color: #faeaec;
+	background-color: #91273e;
+	border: none;
+	border-radius: 10px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	cursor: pointer;
+}
+
+button img {
+	width: 20px;
+	height: 20px;
+}
+
+button:hover {
+	background-color: #a92d4c;
+}
+
+#clearButton,
+#logoutForm {
+	position: absolute;
+	padding: 10px 20px;
+	color: #faeaec;
+	background-color: #91273e;
+	border: none;
+	border-radius: 10px;
+	cursor: pointer;
+	z-index: 1;
+}
+
+#clearButton {
+	top: 20px;
+	right: 20px;
+}
+
+#logoutForm {
+	top: 20px;
+	left: 20px;
+	padding: 0;
+}
+
+#logoutForm:hover {
+	background-color: #a92d4c;
+}
+
+#toChats {
+	position: absolute;
+	bottom: 10px;
+	left: 20px;
+}
+
+[class^="language-"] {
+	border: none !important;
+}
+
+#clearConversationDropdown {
+	position: relative;
+	display: inline-block;
+}
+
+#clearButton {
+    position: relative;
+    top: 0;
+    right: 0;
+    padding: 10px 20px; /* Adjusted padding to match other buttons */
+    font-size: inherit; /* Adjusted font-size to match other buttons */
+    border: none;
+    border-bottom-left-radius: 0; 
+    border-bottom-right-radius: 0; 
+    cursor: pointer;
+    background-color: #91273e;
+    color: #faeaec;
+    margin-bottom: -5px; /* Add this line to pull the dropdown up */
+    width: auto; /* Adjusted width to auto */
+}
+
+#clearButton:hover {
+	background-color: #a92d4c;
+}
+
+#clearDropdown {
+    display: none;
+    position: absolute;
+    padding: 15px 20px;
+    font-size: 18px;
+    background-color: #91273e;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    top: 100%; /* Add this line to ensure it starts right after the button */
+    width: max-content; /* Set width to content */
+    max-width: 90vw; /* Limit maximum width to 90% of viewport width */
+}
+
+#clearDropdown a {
+	padding: 12px 16px;
+	color: #faeaec;
+	text-decoration: none;
+	display: block;
+	white-space: nowrap;
+	background-color: #91273e; /* Make the background color the same as the other buttons */
+}
+
+#clearDropdown a:hover {
+	background-color: #a92d4c; /* Make the hover color the same as the other buttons */
+	border-radius: 10px;
+}
+.dropdown-content.show {
+	display: block;
+}
+#clearDropdown.show {
+	display: block;
+}
+#clearConversationDropdown {
+	position: absolute;
+	top: 20px;
+	right: 20px;
+	display: inline-block;
+}

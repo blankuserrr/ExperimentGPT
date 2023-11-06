@@ -1,0 +1,35 @@
+# Replit files
+*.replit
+replit.nix
+
+# Test results
+/tests/Test Chats/*.json
+/playwright-report
+/playwright-report/*.html
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+node_modules/
+
+# dotenv environment variable files
+*.env
+*.env.development.local
+*.env.test.local
+*.env.production.local
+*.env.local
+
+# ide specific files
+*.vscode
+
+# Custom files
+routes.js
+public/script.js
+public/chats/chat.js
+public/auth/auth.js
