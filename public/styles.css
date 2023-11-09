@@ -142,20 +142,19 @@ button:hover {
 }
 
 #clearButton {
-    position: relative;
-    top: 0;
-    right: 0;
-    padding: 10px 20px; /* Adjusted padding to match other buttons */
-    font-size: inherit; /* Adjusted font-size to match other buttons */
-    border: none;
-    border-bottom-left-radius: 0; 
-    border-bottom-right-radius: 0; 
-    cursor: pointer;
-    background-color: #91273e;
-    color: #faeaec;
-    margin-bottom: -5px; /* Add this line to pull the dropdown up */
-    width: auto; /* Adjusted width to auto */
+  position: relative;
+  top: 0;
+  right: 0;
+  padding: 10px 20px;
+  font-size: inherit;
+  border: none;
+  cursor: pointer;
+  background-color: #91273e;
+  color: #faeaec;
+  width: auto;
+  border-radius: 10px; /* This applies the border radius to all sides */
 }
+
 
 #clearButton:hover {
 	background-color: #a92d4c;
@@ -164,31 +163,33 @@ button:hover {
 #clearDropdown {
     display: none;
     position: absolute;
-    padding: 15px 20px;
-    font-size: 18px;
+    right: 0;
+    top: 100%; /* Position right below the button */
     background-color: #91273e;
     box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
     z-index: 1;
-    border-bottom-left-radius: 10px;
-    border-bottom-right-radius: 10px;
-    top: 100%; /* Add this line to ensure it starts right after the button */
-    width: max-content; /* Set width to content */
-    max-width: 90vw; /* Limit maximum width to 90% of viewport width */
+    border-radius: 10px;
+	border-top-right-radius: 0;
+	border-top-left-radius: 0;
+    width: 100%; /* Span the full width of its parent */
+    box-sizing: border-box; /* Include padding and border in the width */
 }
 
 #clearDropdown a {
-	padding: 12px 16px;
-	color: #faeaec;
-	text-decoration: none;
-	display: block;
-	white-space: nowrap;
-	background-color: #91273e; /* Make the background color the same as the other buttons */
+    padding: 12px 16px;
+    color: #faeaec;
+    text-decoration: none;
+    display: block;
+    background-color: #91273e;
+	border-bottom-left-radius: 10px;
+	border-bottom-right-radius: 10px;
 }
 
 #clearDropdown a:hover {
-	background-color: #a92d4c; /* Make the hover color the same as the other buttons */
-	border-radius: 10px;
+    background-color: #a92d4c;
+    border-radius: 10px;
 }
+
 .dropdown-content.show {
 	display: block;
 }
@@ -196,8 +197,21 @@ button:hover {
 	display: block;
 }
 #clearConversationDropdown {
-	position: absolute;
-	top: 20px;
-	right: 20px;
-	display: inline-block;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    display: inline-block;
+    padding: 0; /* Ensure there's no extra padding */
+    margin: 0;  /* Ensure there's no extra margin */
+    width: auto; /* This should size according to its children */
+}
+
+#clearButton.clearButton-active {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+#clearDropdown.show + #clearButton {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
 }

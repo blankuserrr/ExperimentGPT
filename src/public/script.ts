@@ -79,19 +79,24 @@ window.addEventListener("load", function () {
 	const clearButton = document.getElementById("clearButton");
 	const clearDropdown = document.getElementById("clearDropdown");
 
-	// Toggle the dropdown content when the button is clicked
+	// Toggle the dropdown content and button style when the button is clicked
 	clearButton?.addEventListener("click", function () {
 		console.log("Dropdown Clicked");
-		clearDropdown?.classList.toggle("show");
+		const isDropdownShown = clearDropdown?.classList.contains("show");
+
+		// Toggle the dropdown display
+		clearDropdown?.classList.toggle("show", !isDropdownShown);
+
+		// Toggle the class on the button based on the dropdown state
+		this.classList.toggle("clearButton-active", !isDropdownShown);
 	});
 
 	// Close the dropdown if the user clicks outside of it
 	window.onclick = function (event: MouseEvent) {
-		if (clearDropdown?.classList.contains("show")) {
-			if (event.target && !(event.target as Element).matches("#clearButton") && !(event.target as Element).closest("#clearDropdown")) {
-				console.log("Dropdown Closing");
-				clearDropdown.classList.remove("show");
-			}
+		if (!clearDropdown?.contains(event.target as Node) && !clearButton?.contains(event.target as Node)) {
+			console.log("Dropdown Closing");
+			clearDropdown?.classList.remove("show");
+			clearButton?.classList.remove("clearButton-active");
 		}
 	};
 });
